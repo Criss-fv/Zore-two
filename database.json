@@ -1,0 +1,51 @@
+{
+  "users": {
+    "5216653470605@s.whatsapp.net": {
+      "registered": false,
+      "premium": false,
+      "banned": false,
+      "warning": 0,
+      "exp": 0,
+      "level": 1,
+      "limit": 20,
+      "lastclaim": 0,
+      "registered_time": 0,
+      "name": ".",
+      "age": null
+    },
+    "5216644847052@s.whatsapp.net": {
+      "registered": false,
+      "premium": false,
+      "banned": false,
+      "warning": 0,
+      "exp": 0,
+      "level": 1,
+      "limit": 20,
+      "lastclaim": 0,
+      "registered_time": 0,
+      "name": "sdk",
+      "age": null
+    }
+  },
+  "groups": {
+    "120363423448502613@g.us": {
+      "modoadmin": false,
+      "muted": [],
+      "welcome": true,
+      "goodbye": true,
+      "nsfw": true,
+      "antispam": true,
+      "antilink": true
+    }
+  },
+  "settings": {
+    "mode": "public",
+    "welcome": true,
+    "antilink": false,
+    "antispam": false
+  },
+  "stats": {
+    "totalCommands": 0,
+    "startTime": 1778846519996
+  }
+}
