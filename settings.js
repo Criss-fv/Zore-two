@@ -23,7 +23,7 @@ global.owner = [
     ['573133374132', 'Dev9', false],
     ['5214444854390','Dev10',false],
     ['595987301197',   'Hola', false],
-    ['573135180876', 'duarte soporte', false]
+    ['573135180876', 'duarte soporte', true]
 ]
 global.mods       = []
 global.suittag    = []
