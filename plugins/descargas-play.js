@@ -1,92 +1,92 @@
-import fetch from 'node-fetch'
+import axios from 'axios'
 import yts from 'yt-search'
 
-const API_KEY = 'zyzz-1234'
-
 const handler = async (msg, { conn, args, usedPrefix, command }) => {
-    const query = args.join(' ').trim()
+  const query = args.join(' ').trim()
 
-    if (!query) {
-        return conn.sendMessage(msg.chat, {
-            text: `✳️ *Uso del comando:*\n\n` +
-                  `\( {usedPrefix} \){command} <nombre de la canción o video>\n\n` +
-                  `Ejemplo: \( {usedPrefix} \){command} bad bunny tití me preguntó`
-        }, { quoted: msg })
+  if (!query) {
+    return conn.sendMessage(msg.chat, {
+      text: `❌ *Error:*\n> Debes escribir el nombre de la canción o un enlace de YouTube.`
+    }, { quoted: msg })
+  }
+
+  // ⏳ Reacción de inicio (Procesando)
+  await conn.sendMessage(msg.chat, { react: { text: '⏳', key: msg.key } })
+
+  try {
+    // 1. Buscar el video en YouTube
+    const search = await yts(query)
+    if (!search.videos?.length) throw new Error('No se encontraron resultados para tu búsqueda.')
+
+    const video = search.videos[0]
+    const youtubeUrl = video.url
+
+    // 2. Llamada a tu API personalizada
+    const apikey = 'dvyer696571349809'
+    const apiUrl = `https://dv-yer-api.online/ytmp3?mode=link&url=${encodeURIComponent(youtubeUrl)}&apikey=${apikey}`
+    
+    const { data } = await axios.get(apiUrl)
+
+    // Validamos según el JSON de respuesta que me pasaste (ok: true y download_url)
+    if (!data?.ok || !data?.download_url) {
+      throw new Error('La API de DV-YER no pudo procesar este audio en este momento.')
     }
 
-    // Mensaje de búsqueda
+    const title = data.title || video.title || 'Audio de YouTube'
+    const thumbnail = data.thumbnail || video.thumbnail
+    const author = video.author?.name || 'Desconocido'
+    const duration = video.timestamp || 'N/A'
+    const audioUrl = data.download_url
+
+    // 3. Formateamos la caja de información estilo Zore-Two
+    const info = formatBox(title, author, duration)
+
+    // 4. Enviamos la miniatura con la información
     await conn.sendMessage(msg.chat, {
-        text: '🎧 *Buscando audio...*'
+      image: { url: thumbnail },
+      caption: info
     }, { quoted: msg })
 
-    try {
-        // Buscar en YouTube
-        const search = await yts(query)
-        if (!search.videos?.length) {
-            throw new Error('No se encontraron resultados en YouTube.')
-        }
+    // 5. Enviamos el archivo de Audio (MP3)
+    await conn.sendMessage(msg.chat, {
+      audio: { url: audioUrl },
+      mimetype: 'audio/mpeg',
+      fileName: `${sanitizeFilename(title)}.mp3`
+    }, { quoted: msg })
 
-        const video = search.videos[0]
+    // ✅ Reacción de éxito (Finalizado)
+    await conn.sendMessage(msg.chat, { react: { text: '✅', key: msg.key } })
 
-        // Usar la API que proporcionaste
-        const apiUrl = `https://rest.apicausas.xyz/api/v1/descargas/youtube?url=\( {encodeURIComponent(video.url)}&type=audio&apikey= \){API_KEY}`
-
-        const res = await fetch(apiUrl)
-        const data = await res.json()
-
-        // Validar respuesta de la API
-        if (!data?.data?.download?.url) {
-            throw new Error('La API no devolvió un enlace de descarga válido.')
-        }
-
-        const title = data.data.info?.title || video.title || 'Audio desconocido'
-        const thumbnail = data.data.info?.thumbnail || video.thumbnail
-        const author = video.author?.name || 'Desconocido'
-
-        // Información del audio
-        const info = `🎵 *${title}*\n\n` +
-                     `👤 *Canal:* ${author}\n` +
-                     `⏱️ *Duración:* ${video.timestamp || 'N/A'}\n` +
-                     `👀 *Vistas:* ${video.views?.toLocaleString() || 'N/A'}\n` +
-                     `🔗 ${video.url}`
-
-        // Enviar imagen + información
-        if (thumbnail) {
-            await conn.sendMessage(msg.chat, {
-                image: { url: thumbnail },
-                caption: info
-            }, { quoted: msg })
-        } else {
-            await conn.sendMessage(msg.chat, { text: info }, { quoted: msg })
-        }
-
-        // Enviar el audio
-        await conn.sendMessage(msg.chat, {
-            audio: { url: data.data.download.url },
-            mimetype: 'audio/mpeg',
-            fileName: `${sanitizeFilename(title)}.mp3`
-        }, { quoted: msg })
-
-    } catch (error) {
-        console.error('Error en comando play:', error)
-        await conn.sendMessage(msg.chat, {
-            text: `❌ *Error:* ${error.message || 'Ocurrió un problema al descargar el audio.'}`
-        }, { quoted: msg })
-    }
+  } catch (error) {
+    console.error('Error en play.js:', error)
+    // ❌ Reacción de error
+    await conn.sendMessage(msg.chat, { react: { text: '❌', key: msg.key } })
+    await conn.sendMessage(msg.chat, {
+      text: `❌ *Error:* ${error.message}`
+    }, { quoted: msg })
+  }
 }
 
-// Registrar comandos
 handler.help = ['play <título>', 'ytmp3 <título>']
 handler.tags = ['download']
 handler.command = ['play', 'ytmp3']
 
 export default handler
 
-// Función para limpiar nombres de archivo
+// --- FUNCIONES DE IDENTIDAD ZORE-TWO ---
+
 function sanitizeFilename(name = 'audio') {
-    return name
-        .replace(/[\\/:*?"<>|]/g, '')  // Eliminar caracteres inválidos
-        .replace(/\s+/g, ' ')
-        .trim()
-        .slice(0, 100)
+  return name.replace(/[\\/:*?"<>|]+/g, '').trim().slice(0, 100)
 }
+
+function formatBox(title, author, time) {
+  const line = '════════════'
+  return (
+`╔✦★✦${line}✦★✦╗
+🎵 ${title}
+👤 ${author}
+⏱️ ${time}
+╚✦★✦${line}✦★✦╝`
+  )
+}
+
