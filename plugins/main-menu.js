@@ -108,10 +108,11 @@ const handler = async (m, { conn }) => {
 _${saludo}_
 *${m.pushName || 'Usuario'}*... ${frase}
 
-┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐
-│ ⏱️ *Hora (Tijuana):* ${horaExacta}
-│ 🚀 *Activo:* ${uptimeStr}
-└ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
+ ✠ ───────────────────── ✠
+ ⸸ *Hora (TJ):* ${horaExacta}
+ ⸸ *Activo:* ${uptimeStr}
+ ✠ ───────────────────── ✠
+
 
 ⸸ *Comandos activos:* ${totalCmds}
 ⸸ *Usuarios registrados:* ${registeredUsers}
