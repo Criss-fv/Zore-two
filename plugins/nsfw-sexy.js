@@ -15,7 +15,7 @@ let handler = async (m, { conn }) => {
         // 3. Verificamos la estructura (aquí usamos res.result)
         if (res && res.status && res.result) {
             let img = res.result // <-- Aquí cambia con respecto al comando anterior
-            let text = `✨ *ZORE-TWO SEXY GIRLS* ✨\n\n📝 _${res.description || 'Imágenes sexy/love de Mujeres.'}_\n👤 *Creador:* ${res.creator || 'GataDios'}`
+            let text = `✨ *SHIRUKU SEXY GIRLS* ✨\n\n📝 _${res.description || 'Imágenes sexy/love de Mujeres.'}_\n👤 *Creador:* ${res.creator || 'GataDios'}`
 
             // 4. Enviamos la imagen a WhatsApp
             await conn.sendMessage(m.chat, {
