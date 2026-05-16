@@ -152,35 +152,32 @@ export const handler = async (m, conn, plugins) => {
         // ── OPCIÓN 2: Sin prefijo ────────────────────────────────────────────
         if (!prefix) {
             const sinprefixEnabled = database.data?.settings?.sinprefix ?? true
+            if (!sinprefixEnabled) return
 
-            if (sinprefixEnabled) {
-                const parts = m.body.trim().split(/ +/)
-                const firstWord = parts[0].toLowerCase()
+            const parts = m.body.trim().split(/ +/)
+            const firstWord = parts[0]?.toLowerCase()
+            if (!firstWord) return
+            if (IGNORED_WORDS.includes(firstWord)) return
 
-                if (IGNORED_WORDS.includes(firstWord)) return
-
-                let isCommand = false
-                for (const [, plugin] of plugins) {
-                    if (!plugin.command) continue
-                    const cmds = Array.isArray(plugin.command)
-                        ? plugin.command
-                        : plugin.command instanceof RegExp
-                            ? []
-                            : [plugin.command]
-                    if (cmds.map(c => c.toLowerCase()).includes(firstWord)) {
-                        isCommand = true
-                        commandName = firstWord
-                        args = parts.slice(1)
-                        prefix = ''
-                        usedPrefix = ''
-                        break
-                    }
+            // Construir set de todos los comandos disponibles
+            const allCmds = new Map() // cmd → plugin
+            for (const [, plugin] of plugins) {
+                if (!plugin?.command) continue
+                let cmds = []
+                if (Array.isArray(plugin.command)) cmds = plugin.command
+                else if (typeof plugin.command === 'string') cmds = [plugin.command]
+                else if (plugin.command instanceof RegExp) continue
+                for (const c of cmds) {
+                    if (typeof c === 'string') allCmds.set(c.toLowerCase(), plugin)
                 }
-
-                if (!isCommand) return
-            } else {
-                return
             }
+
+            if (!allCmds.has(firstWord)) return // no es comando, ignorar silencioso
+
+            commandName = firstWord
+            args = parts.slice(1)
+            prefix = ''
+            usedPrefix = ''
         }
 
         if (!commandName) return
