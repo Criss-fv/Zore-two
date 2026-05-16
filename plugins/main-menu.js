@@ -61,14 +61,20 @@ ${seccionesTexto}
         const response = await fetch('https://causas-files.vercel.app/fl/9vs2.jpg')
         const buffer = await response.buffer()
 
+        // Primero manda la foto
+        await conn.sendMessage(m.chat, {
+            image: buffer,
+            caption: menuTexto,
+            mentions: [m.sender]
+        }, { quoted: m })
+
+        // Luego el documento falso PDF
         await conn.sendMessage(m.chat, {
             document: buffer,
             mimetype: 'application/pdf',
             fileName: `『 Zero Two Menu 』.pdf`,
             fileLength: 2199023255552,
             pageCount: 2026,
-            caption: menuTexto,
-            mentions: [m.sender],
             contextInfo: {
                 isForwarded: true,
                 forwardingScore: 999,
