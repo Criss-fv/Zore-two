@@ -166,7 +166,7 @@ ${seccionesTexto}
 _— ${botname} · Araña Nº8 · no me molestes si no es urgente_ 🕷️
 `.trim()
 
-        const thumbUrl = 'https://files.catbox.moe/9enbxk.jpg'
+        const thumbUrl = 'https://files.catbox.moe/y47iw7.jpg'
 
         const thumbOriginal = await getBuffer(thumbUrl)
         const thumbResized = await resizeThumbnail(thumbOriginal)
