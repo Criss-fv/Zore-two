@@ -126,7 +126,7 @@ ${seccionesTexto}
 _— ${botname} · Araña Nº8 · no me molestes si no es urgente_ 🕷️
 `.trim()
 
-        const thumbUrl = 'https://causas-files.vercel.app/fl/9vs2.jpg'
+        const thumbUrl = 'https://files.catbox.moe/krpgkn.jpg'
 
         // Así se envía como una FOTO NORMAL con el texto en la descripción
         await conn.sendMessage(m.chat, {
