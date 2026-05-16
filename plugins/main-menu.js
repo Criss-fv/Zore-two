@@ -2,7 +2,50 @@ import fs from 'fs'
 import path from 'path'
 import { pathToFileURL } from 'url'
 import fetch from 'node-fetch'
+import {
+    proto,
+    prepareWAMessageMedia,
+    generateWAMessageFromContent
+} from '@whiskeysockets/baileys'
 import { database } from '../lib/database.js'
+
+async function getBuffer(url) {
+    const res = await fetch(url)
+
+    if (!res.ok) {
+        throw new Error(`Error descargando ${url}: ${res.status}`)
+    }
+
+    return Buffer.from(await res.arrayBuffer())
+}
+
+async function resizeThumbnail(buffer) {
+    try {
+        const jimpModule = await import('jimp')
+        const Jimp = jimpModule.Jimp || jimpModule.default
+
+        const img = await Jimp.read(buffer)
+
+        if (typeof img.cover === 'function') {
+            img.cover(300, 300)
+        } else {
+            img.resize(300, 300)
+        }
+
+        if (typeof img.quality === 'function') {
+            img.quality(80)
+        }
+
+        if (typeof img.getBufferAsync === 'function') {
+            return await img.getBufferAsync('image/jpeg')
+        }
+
+        return await img.getBuffer('image/jpeg')
+    } catch (e) {
+        console.warn('No se pudo redimensionar thumbnail, usando buffer original:', e.message)
+        return buffer
+    }
+}
 
 const handler = async (m, { conn }) => {
     try {
@@ -21,6 +64,7 @@ const handler = async (m, { conn }) => {
                 const plugin = (await import(`${pathToFileURL(filePath).href}?update=${Date.now()}`)).default
 
                 const tags = plugin?.tags || ['misc']
+
                 const commands = Array.isArray(plugin?.command)
                     ? plugin.command
                     : plugin?.command
@@ -48,6 +92,7 @@ const handler = async (m, { conn }) => {
 
         const zonaHoraria = 'America/Bogota'
         const ahora = new Date()
+
         const hora = parseInt(
             ahora.toLocaleTimeString('es-CO', {
                 timeZone: zonaHoraria,
@@ -98,28 +143,50 @@ _— ${botname} · Araña Nº8 · no me molestes si no es urgente_ 🕷️
 `.trim()
 
         const thumbUrl = 'https://causas-files.vercel.app/fl/9vs2.jpg'
-        const thumbResponse = await fetch(thumbUrl)
 
-        if (!thumbResponse.ok) {
-            throw new Error(`No se pudo descargar la thumbnail: ${thumbResponse.status}`)
-        }
-
-        const thumbBuffer = Buffer.from(await thumbResponse.arrayBuffer())
+        const thumbOriginal = await getBuffer(thumbUrl)
+        const thumbResized = await resizeThumbnail(thumbOriginal)
 
         const fakeDocument = Buffer.from(menuTexto, 'utf-8')
 
-        await conn.sendMessage(
-            m.chat,
+        const prepared = await prepareWAMessageMedia(
             {
                 document: fakeDocument,
                 mimetype: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                fileName: '🕷 Shizuku System.xlsx',
-                fileLength: 1099511627776,
-                jpegThumbnail: thumbBuffer,
-                caption: menuTexto,
-                mentions: [m.sender]
+                fileName: '🕷 Shizuku System.xlsx'
             },
-            { quoted: m }
+            {
+                upload: conn.waUploadToServer
+            }
+        )
+
+        const documentMessage = prepared.documentMessage
+
+        documentMessage.fileName = '🕷 Shizuku System.xlsx'
+        documentMessage.title = '🕷 Shizuku System'
+        documentMessage.caption = menuTexto
+        documentMessage.mimetype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        documentMessage.pageCount = 0
+        documentMessage.jpegThumbnail = thumbResized
+        documentMessage.thumbnailWidth = 300
+        documentMessage.thumbnailHeight = 300
+
+        const waMsg = generateWAMessageFromContent(
+            m.chat,
+            {
+                documentMessage: proto.Message.DocumentMessage.fromObject(documentMessage)
+            },
+            {
+                userJid: conn.user?.id
+            }
+        )
+
+        await conn.relayMessage(
+            m.chat,
+            waMsg.message,
+            {
+                messageId: waMsg.key.id
+            }
         )
 
     } catch (e) {
