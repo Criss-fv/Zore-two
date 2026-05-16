@@ -34,11 +34,14 @@ async function sendAlbumMessage(conn, jid, medias, options = {}) {
 }
 
 const handler = async (m, { conn, text, usedPrefix, command }) => {
+    const prefix = usedPrefix || global.prefix || '.'
+    const cmd = Array.isArray(command) ? command[0] : (command || 'pinterest')
+
     if (!text) return m.reply(
         `⸸ *${global.botName}* · Buscador\n\n` +
         `...necesito saber qué buscar.\n` +
-        `📌 Uso: *${usedPrefix + command} <búsqueda>*\n` +
-        `Ejemplo: *${usedPrefix + command} Shizuku HxH*`
+        `📌 Uso: *${prefix}${cmd} <búsqueda>*\n` +
+        `Ejemplo: *${prefix}${cmd} Shizuku HxH*`
     );
 
     await m.react('⏳');
