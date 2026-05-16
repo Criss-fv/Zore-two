@@ -1,50 +1,15 @@
 import fs from 'fs'
 import path from 'path'
 import { pathToFileURL } from 'url'
-import fetch from 'node-fetch'
-import {
-    proto,
-    prepareWAMessageMedia,
-    generateWAMessageFromContent
-} from '@whiskeysockets/baileys'
 import { database } from '../lib/database.js'
 
-async function getBuffer(url) {
-    const res = await fetch(url)
-
-    if (!res.ok) {
-        throw new Error(`Error descargando ${url}: ${res.status}`)
-    }
-
-    return Buffer.from(await res.arrayBuffer())
-}
-
-async function resizeThumbnail(buffer) {
-    try {
-        const jimpModule = await import('jimp')
-        const Jimp = jimpModule.Jimp || jimpModule.default
-
-        const img = await Jimp.read(buffer)
-
-        if (typeof img.cover === 'function') {
-            img.cover(300, 300)
-        } else {
-            img.resize(300, 300)
-        }
-
-        if (typeof img.quality === 'function') {
-            img.quality(80)
-        }
-
-        if (typeof img.getBufferAsync === 'function') {
-            return await img.getBufferAsync('image/jpeg')
-        }
-
-        return await img.getBuffer('image/jpeg')
-    } catch (e) {
-        console.warn('No se pudo redimensionar thumbnail, usando buffer original:', e.message)
-        return buffer
-    }
+// Función para formatear el tiempo activo en días, horas, minutos y segundos
+function formatUptime(seconds) {
+    let d = Math.floor(seconds / (3600 * 24));
+    let h = Math.floor(seconds % (3600 * 24) / 3600);
+    let m = Math.floor(seconds % 3600 / 60);
+    let s = Math.floor(seconds % 60);
+    return `${d}d ${h}h ${m}m ${s}s`;
 }
 
 const handler = async (m, { conn }) => {
@@ -90,11 +55,22 @@ const handler = async (m, { conn }) => {
         const totalUsers = Object.keys(users).length
         const registeredUsers = Object.values(users).filter(u => u?.registered).length
 
-        const zonaHoraria = 'America/Bogota'
+        // Configuración de la zona horaria de Tijuana
+        const zonaHoraria = 'America/Tijuana'
         const ahora = new Date()
 
+        // Hora exacta para la tablita
+        const horaExacta = ahora.toLocaleTimeString('es-MX', {
+            timeZone: zonaHoraria,
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true
+        })
+
+        // Hora en número para definir el saludo (mañana, tarde, noche)
         const hora = parseInt(
-            ahora.toLocaleTimeString('es-CO', {
+            ahora.toLocaleTimeString('es-MX', {
                 timeZone: zonaHoraria,
                 hour: '2-digit',
                 hour12: false
@@ -119,16 +95,23 @@ const handler = async (m, { conn }) => {
 
         const seccionesTexto = Object.entries(grouped)
             .map(([tag, cmds]) => {
-                return `꧁ · ${tag.toUpperCase()} · ꧂
-${cmds.map(c => `  ⸸ ${c}`).join('\n')}`
+                return `꧁ · ${tag.toUpperCase()} · ꧂\n${cmds.map(c => `  ⸸ ${c}`).join('\n')}`
             })
             .join('\n\n')
+
+        // Obtenemos el tiempo que el bot lleva encendido
+        const uptimeStr = formatUptime(process.uptime())
 
         const menuTexto = `
 ✠ ══〔 𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒 〕══ ✠
 
 _${saludo}_
 *${m.pushName || 'Usuario'}*... ${frase}
+
+┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐
+│ ⏱️ *Hora (Tijuana):* ${horaExacta}
+│ 🚀 *Activo:* ${uptimeStr}
+└ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
 
 ⸸ *Comandos activos:* ${totalCmds}
 ⸸ *Usuarios registrados:* ${registeredUsers}
@@ -144,50 +127,11 @@ _— ${botname} · Araña Nº8 · no me molestes si no es urgente_ 🕷️
 
         const thumbUrl = 'https://causas-files.vercel.app/fl/9vs2.jpg'
 
-        const thumbOriginal = await getBuffer(thumbUrl)
-        const thumbResized = await resizeThumbnail(thumbOriginal)
-
-        const fakeDocument = Buffer.from(menuTexto, 'utf-8')
-
-        const prepared = await prepareWAMessageMedia(
-            {
-                document: fakeDocument,
-                mimetype: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                fileName: '🕷 Shizuku System.xlsx'
-            },
-            {
-                upload: conn.waUploadToServer
-            }
-        )
-
-        const documentMessage = prepared.documentMessage
-
-        documentMessage.fileName = '🕷 Shizuku System.xlsx'
-        documentMessage.title = '🕷 Shizuku System'
-        documentMessage.caption = menuTexto
-        documentMessage.mimetype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        documentMessage.pageCount = 0
-        documentMessage.jpegThumbnail = thumbResized
-        documentMessage.thumbnailWidth = 300
-        documentMessage.thumbnailHeight = 300
-
-        const waMsg = generateWAMessageFromContent(
-            m.chat,
-            {
-                documentMessage: proto.Message.DocumentMessage.fromObject(documentMessage)
-            },
-            {
-                userJid: conn.user?.id
-            }
-        )
-
-        await conn.relayMessage(
-            m.chat,
-            waMsg.message,
-            {
-                messageId: waMsg.key.id
-            }
-        )
+        // Así se envía como una FOTO NORMAL con el texto en la descripción
+        await conn.sendMessage(m.chat, {
+            image: { url: thumbUrl },
+            caption: menuTexto
+        }, { quoted: m })
 
     } catch (e) {
         console.error(e)
