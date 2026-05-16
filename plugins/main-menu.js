@@ -70,16 +70,20 @@ _— ${botname} · Araña Nº8 · no me molestes si no es urgente_ 🕷️`.trim
         const response = await fetch('https://causas-files.vercel.app/fl/9vs2.jpg')
         const buffer = await response.buffer()
 
+        // Documento falso con imagen como thumbnail (efecto igual al screenshot)
         await conn.sendMessage(m.chat, {
-            image: buffer,
+            document: buffer,
+            mimetype: 'image/jpeg',
+            fileName: `𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒`,
+            fileLength: 1099511627776, // 1.0 TB falso
             caption: menuTexto,
             mentions: [m.sender],
             contextInfo: {
                 isForwarded: true,
                 forwardingScore: 999,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363404822730259@newsletter',
-                    newsletterName: '𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒',
+                    newsletterJid: global.newsletterJid || '120363401404146384@newsletter',
+                    newsletterName: global.newsletterName || '🕷️ 𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒 🕷️',
                     serverMessageId: -1
                 }
             }
