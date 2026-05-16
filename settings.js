@@ -1,8 +1,3 @@
-// ╔══════════════════════════════════════════════════════════════╗
-// ║                  SETTINGS.JS — ZERO TWO                     ║
-// ║                  power by ZoreDevTeam                       ║
-// ╚══════════════════════════════════════════════════════════════╝
-
 import { watchFile, unwatchFile } from 'fs'
 import chalk from 'chalk'
 import { fileURLToPath } from 'url'
@@ -35,33 +30,33 @@ global.libreria   = 'Baileys'
 global.baileys    = 'V 6.7.17'
 global.vs         = '1.0.0'
 global.botVersion = '1.0.0'
-global.nameqr     = '✯ Zero Two ✰'
-global.namebot    = 'Z E R O  T W O'
-global.botName    = 'Zero Two'
-global.botname    = 'Zero Two'
+global.nameqr     = '✠ Shizuku ✠'
+global.namebot    = 'S H I Z U K U'
+global.botName    = 'Shizuku'
+global.botname    = 'Shizuku'
 global.sessions   = './Sessions/Owner'
 global.jadi       = 'JadiBots'
 
 // ─── TEXTOS Y ETIQUETAS ─────────────────────────────────────────────────────
-global.packname   = '💗 𝒁𝒆𝒓𝒐 𝑻𝒘𝒐 💗'
-global.wm         = '💗◟𝓩𝓮𝓻𝓸 𝓣𝔀𝓸◞💗'
-global.author     = '© ZoreDevTeam'
-global.dev        = '© 🄿🄾🅆🄴🅁🄴🄳 ZoreDevTeam'
-global.botText    = '❖ 𝐙𝐄𝐑𝐎 𝐓𝐖𝐎 ❖ - power by ZoreDevTeam'
-global.botTag     = '✰ 𝐙𝐄𝐑𝐎 𝐓𝐖𝐎 ✰ (•̀ᴗ•́)و'
-global.devCredit  = '© ZoreDevTeam'
-global.authorCredit = '© ZoreDevTeam'
-global.etiqueta   = '💗 ZoreDevTeam 💗'
-global.textbot    = '🌸 Zero Two, una guerrera que transforma cada batalla en una danza mortal con su Franxx. 💗⚔️🌸'
+global.packname   = '🕷️ 𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒 🕷️'
+global.wm         = '🕷️ 𝕾𝖍𝖎𝖟𝖚𝖐𝖚 🕷️'
+global.author     = '© ShizukuSystem'
+global.dev        = '© 𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒'
+global.botText    = '⸸ 𝕾𝖍𝖎𝖟𝖚𝖐𝖚 · Araña Nº8 · no me molestes si no es urgente 🕷️'
+global.botTag     = '✠ 𝕾𝖍𝖎𝖟𝖚𝖐𝖚 ✠'
+global.devCredit  = '© ShizukuSystem'
+global.authorCredit = '© ShizukuSystem'
+global.etiqueta   = '🕷️ ShizukuSystem 🕷️'
+global.textbot    = '⸸ Shizuku Murasaki. Araña Nº8. Blinky hace el trabajo sucio. Yo solo superviso.'
 
 // ─── MONEDA / JUEGO ─────────────────────────────────────────────────────────
-global.moneda        = 'Stamps'
-global.currencySymbol = 'Stamps'
+global.moneda        = 'Nen'
+global.currencySymbol = 'Nen'
 global.multiplier    = 60
 
 // ─── MENSAJES BIENVENIDA ────────────────────────────────────────────────────
-global.welcom1 = '¡Bienvenido a mi paraíso rosado! 💗\n✨ Soy Zero Two ✨\n🌸 Edita este mensaje con setwelcome 🌸'
-global.welcom2 = '💔 ¡Hasta la próxima, Darling! Gracias por estar aquí~\n🌸 ¡Espero verte pronto de nuevo! 🌸\n💗 Edita este mensaje con setbye 💗'
+global.welcom1 = '...llegaste. supongo que puedes quedarte.\n⸸ Bienvenido al sistema.\n🕷️ Edita esto con setwelcome 🕷️'
+global.welcom2 = '...te fuiste. qué raro, no lo noté de inmediato.\n⸸ Hasta la próxima.\n🕷️ Edita esto con setbye 🕷️'
 
 // ─── BANNER ─────────────────────────────────────────────────────────────────
 global.banner    = 'https://wallpapers.com/images/hd/zero-two-pictures-1j4mw86y6ncyfvj2.jpg'
@@ -73,10 +68,10 @@ global.catalogImage = null
 
 // ─── PREFIJO ────────────────────────────────────────────────────────────────
 global.prefix    = '.'
-global.botEmoji  = '💗'
-global.emoji     = '💗'
-global.emoji2    = '🌸'
-global.emoji3    = '💕'
+global.botEmoji  = '🕷️'
+global.emoji     = '🕷️'
+global.emoji2    = '✠'
+global.emoji3    = '⸸'
 
 // ─── LINKS ──────────────────────────────────────────────────────────────────
 global.groupLink     = 'https://chat.whatsapp.com/tu-link-grupo'
@@ -86,35 +81,27 @@ global.gitHubRepo    = 'https://github.com/zoredevteam-ctrl/Zore-two.git'
 global.emailContact  = 'Zoredevteam@gmail.com'
 global.correo        = 'Zoredevteam@gmail.com'
 
-global.gp1       = global.groupLink
+global.gp1        = global.groupLink
 global.comunidad1 = global.communityLink
-global.channel   = global.channelLink
-global.md        = global.gitHubRepo
+global.channel    = global.channelLink
+global.md         = global.gitHubRepo
 
 // ─── CANAL / NEWSLETTER ─────────────────────────────────────────────────────
-// rcanal = link del canal de WhatsApp
 global.rcanal         = 'https://whatsapp.com/channel/0029Vb6p68rF6smrH4Jeay3Y'
-
-// JID del canal — formato: 120363XXXXXXXXX@newsletter
-// Cómo obtenerlo: WhatsApp Web → F12 → Network → busca "newsletter"
 global.newsletterJid  = '120363401404146384@newsletter'
-global.newsletterName = '💗 𝐙𝐄𝐑𝐎 𝐓𝐖𝐎 💗'
+global.newsletterName = '🕷️ 𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒 🕷️'
 
-// Compatibilidad con settings anterior
 global.newsChannels = { primary: global.newsletterJid }
 global.ch = { ch1: global.newsletterJid }
 
 // ─── FUNCIÓN: Obtener thumbnail del banner como Buffer ───────────────────────
-// ✅ Siempre devuelve Buffer (nunca URL ni base64 crudo)
 global.getBannerBuffer = async (db) => {
     try {
-        // Primero buscar banner del sub-bot activo
         const subbotId = global._currentSubbotId
         if (subbotId && db?.subbots?.[subbotId]?.banner) {
             const b64 = db.subbots[subbotId].banner
             return Buffer.from(b64.includes(',') ? b64.split(',')[1] : b64, 'base64')
         }
-        // Fallback al banner global
         const src = global.banner || ''
         if (!src) return null
         if (src.startsWith('data:image')) {
@@ -127,8 +114,7 @@ global.getBannerBuffer = async (db) => {
     }
 }
 
-// Alias para compatibilidad
-global.getBannerThumb = global.getBannerBuffer
+global.getBannerThumb  = global.getBannerBuffer
 global.getActiveBanner = (db) => {
     const subbotId = global._currentSubbotId
     if (subbotId && db?.subbots?.[subbotId]?.bannerUrl) {
@@ -137,10 +123,8 @@ global.getActiveBanner = (db) => {
     return global.banner
 }
 
-// ─── FUNCIÓN: Generar contextInfo completo con botón de canal ────────────────
-// Uso: const ctx = await global.getNewsletterCtx(thumbnail, 'Título', 'Cuerpo')
-// Resultado: { isForwarded, forwardedNewsletterMessageInfo, externalAdReply }
-global.getNewsletterCtx = (thumbnail, title = global.botName, body = global.botText) => {
+// ─── FUNCIÓN: Generar contextInfo con tag del canal ──────────────────────────
+global.getSystemCtx = (thumbnail, title = global.botName, body = global.botText) => {
     const ctx = {
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
@@ -149,42 +133,47 @@ global.getNewsletterCtx = (thumbnail, title = global.botName, body = global.botT
             newsletterName: global.newsletterName
         }
     }
-
     if (thumbnail) {
         ctx.externalAdReply = {
-            title: title,
-            body: body,
-            thumbnail: thumbnail,      // ← Buffer, nunca URL ni base64 directo
+            title,
+            body,
+            thumbnail,
             sourceUrl: global.rcanal,
             mediaType: 1,
             renderLargerThumbnail: true
         }
     }
-
     return ctx
 }
 
-// ─── FUNCIÓN: Enviar mensaje al canal con botón automático ───────────────────
-// Uso: await global.sendToChannel(conn, texto, db)
-global.sendToChannel = async (conn, text, db) => {
-    const jid   = global.newsletterJid
+// Alias para compatibilidad con plugins que usen el nombre anterior
+global.getNewsletterCtx = global.getSystemCtx
+
+// ─── FUNCIÓN: Enviar mensaje al canal ────────────────────────────────────────
+global.transmitir = async (conn, text, db) => {
+    const jid = global.newsletterJid
     if (!jid) throw new Error('global.newsletterJid no configurado')
     const thumb = await global.getBannerBuffer(db)
-    const ctx   = global.getNewsletterCtx(thumb, global.botName, text)
+    const ctx   = global.getSystemCtx(thumb, global.botName, text)
     return conn.sendMessage(jid, { text, contextInfo: ctx })
 }
 
-// ─── FUNCIÓN: Enviar cualquier mensaje con tag del canal ──────────────────────
-// Uso: await global.sendWithCtx(conn, chat, { text: 'hola' }, db, { quoted: m })
-global.sendWithCtx = async (conn, jid, content, db, options = {}) => {
+// Alias anterior
+global.sendToChannel = global.transmitir
+
+// ─── FUNCIÓN: Enviar mensaje con tag del canal ───────────────────────────────
+global.invocar = async (conn, jid, content, db, options = {}) => {
     const thumb = await global.getBannerBuffer(db)
-    const ctx   = global.getNewsletterCtx(thumb, global.botName, global.botText)
+    const ctx   = global.getSystemCtx(thumb, global.botName, global.botText)
     content.contextInfo = {
         ...(content.contextInfo || {}),
         ...ctx
     }
     return conn.sendMessage(jid, content, options)
 }
+
+// Alias anterior
+global.sendWithCtx = global.invocar
 
 // ─── APIs ────────────────────────────────────────────────────────────────────
 global.apiConfigs = {
@@ -198,7 +187,7 @@ global.apiConfigs = {
     ootaizumi: { baseUrl: 'https://api.ootaizumi.web.id', key: null },
     apifaa:    { baseUrl: 'https://api-faa.my.id',        key: null },
 }
-global.api = { url: 'https://api.stellarwa.xyz', key: 'YukiWaBot' }
+global.api  = { url: 'https://api.stellarwa.xyz', key: 'YukiWaBot' }
 global.APIs = {
     stellar:  'https://api.stellarwa.xyz',
     xyro:     'https://api.xyro.site',
@@ -222,7 +211,7 @@ for (const dir of ['./Sessions', './Sessions/Owner', './Sessions/SubBots', './Se
     }
 }
 
-console.log(chalk.greenBright('✅ settings.js cargado correctamente.'))
+console.log(chalk.greenBright('✅ ShizukuSystem · settings cargado.'))
 
 // ─── HOT RELOAD ──────────────────────────────────────────────────────────────
 watchFile(scriptPath, () => {
