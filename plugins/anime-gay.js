@@ -1,6 +1,6 @@
 const handler = async (m, { conn, db }) => {
     try {
-        // Reacción inicial al procesar el comando
+    
         await m.react('🏳️‍🌈')
 
         let who
@@ -12,7 +12,7 @@ const handler = async (m, { conn, db }) => {
             who = m.sender
         }
 
-        // Corrección para IDs tipo @lid o no numéricos
+        
         if (who.endsWith('@lid') || isNaN(who.split('@')[0])) {
             try {
                 const groupMeta = await conn.groupMetadata(m.chat)
@@ -21,7 +21,7 @@ const handler = async (m, { conn, db }) => {
             } catch {}
         }
 
-        // Obtener el nombre del usuario desde la base de datos o fallback
+    
         const getName = (jid) => db.users?.[jid]?.name || jid.split('@')[0]
         let name = getName(who)
 
@@ -36,7 +36,7 @@ const handler = async (m, { conn, db }) => {
         else if (porcentaje < 400) frase = "💃 Desbordando energía arcoíris..."
         else frase = "💖 ¡Explosión total de arcoíris, nivel legendario!"
 
-        // 1. ANIMACIÓN DE CARGA
+        
         let { key } = await conn.sendMessage(m.chat, { text: "🏳️‍🌈 *Escaneando...* 0%\n░░░░░░░░░░" }, { quoted: m })
 
         const pasos = [
@@ -52,10 +52,10 @@ const handler = async (m, { conn, db }) => {
             await conn.sendMessage(m.chat, { text: pasos[i], edit: key })
         }
 
-        // 2. Borrar mensaje de carga intermedio
+        
         await conn.sendMessage(m.chat, { delete: key })
 
-        // 3. Enviar el resultado con el video final
+        // 3. Enviar el resultado
         await conn.sendMessage(m.chat, { 
             video: { url: 'https://files.catbox.moe/7lvpbf.mp4' }, 
             gifPlayback: true,
