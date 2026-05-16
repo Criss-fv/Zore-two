@@ -11,11 +11,11 @@ import { database } from '../lib/database.js'
 
 // Función añadida para calcular el tiempo activo
 function formatUptime(seconds) {
-    let d = Math.floor(seconds / (3600 * 24));
-    let h = Math.floor(seconds % (3600 * 24) / 3600);
-    let m = Math.floor(seconds % 3600 / 60);
-    let s = Math.floor(seconds % 60);
-    return `${d}d ${h}h ${m}m ${s}s`;
+    let d = Math.floor(seconds / (3600 * 24))
+    let h = Math.floor(seconds % (3600 * 24) / 3600)
+    let m = Math.floor(seconds % 3600 / 60)
+    let s = Math.floor(seconds % 60)
+    return `${d}d ${h}h ${m}m ${s}s`
 }
 
 async function getBuffer(url) {
@@ -35,14 +35,15 @@ async function resizeThumbnail(buffer) {
 
         const img = await Jimp.read(buffer)
 
-        if (typeof img.cover === 'function') {
-            img.cover(300, 300)
+        // Banner horizontal compacto tipo menú Choso
+        if (typeof img.contain === 'function') {
+            img.contain(700, 300)
         } else {
-            img.resize(300, 300)
+            img.resize(700, 300)
         }
 
         if (typeof img.quality === 'function') {
-            img.quality(80)
+            img.quality(90)
         }
 
         if (typeof img.getBufferAsync === 'function') {
@@ -51,7 +52,10 @@ async function resizeThumbnail(buffer) {
 
         return await img.getBuffer('image/jpeg')
     } catch (e) {
-        console.warn('No se pudo redimensionar thumbnail, usando buffer original:', e.message)
+        console.warn(
+            'No se pudo redimensionar thumbnail, usando buffer original:',
+            e.message
+        )
         return buffer
     }
 }
@@ -70,15 +74,20 @@ const handler = async (m, { conn }) => {
         for (const file of pluginFiles) {
             try {
                 const filePath = path.join(pluginDir, file)
-                const plugin = (await import(`${pathToFileURL(filePath).href}?update=${Date.now()}`)).default
+
+                const plugin = (
+                    await import(
+                        `${pathToFileURL(filePath).href}?update=${Date.now()}`
+                    )
+                ).default
 
                 const tags = plugin?.tags || ['misc']
 
                 const commands = Array.isArray(plugin?.command)
                     ? plugin.command
                     : plugin?.command
-                        ? [plugin.command]
-                        : [file.replace('.js', '')]
+                      ? [plugin.command]
+                      : [file.replace('.js', '')]
 
                 const cmd = commands[0]
 
@@ -97,13 +106,14 @@ const handler = async (m, { conn }) => {
         const totalCmds = Object.values(grouped).flat().length
         const users = database?.data?.users || {}
         const totalUsers = Object.keys(users).length
-        const registeredUsers = Object.values(users).filter(u => u?.registered).length
+        const registeredUsers = Object.values(users).filter(
+            u => u?.registered
+        ).length
 
-        // Zona horaria cambiada a Tijuana
+        // Zona horaria
         const zonaHoraria = 'America/Tijuana'
         const ahora = new Date()
 
-        // Variables añadidas: Hora exacta y Uptime
         const horaExacta = ahora.toLocaleTimeString('es-MX', {
             timeZone: zonaHoraria,
             hour: '2-digit',
@@ -111,6 +121,7 @@ const handler = async (m, { conn }) => {
             second: '2-digit',
             hour12: true
         })
+
         const uptimeStr = formatUptime(process.uptime())
 
         const hora = parseInt(
@@ -123,9 +134,13 @@ const handler = async (m, { conn }) => {
 
         let saludo
 
-        if (hora >= 5 && hora < 12) saludo = '...buenos días, supongo.'
-        else if (hora >= 12 && hora < 18) saludo = '...buenas tardes. o algo así.'
-        else saludo = '...buenas noches. ¿por qué sigues despierto?'
+        if (hora >= 5 && hora < 12)
+            saludo = '...buenos días, supongo.'
+        else if (hora >= 12 && hora < 18)
+            saludo = '...buenas tardes. o algo así.'
+        else
+            saludo =
+                '...buenas noches. ¿por qué sigues despierto?'
 
         const frases = [
             'no recuerdo haberte invitado, pero aquí estás.',
@@ -135,11 +150,14 @@ const handler = async (m, { conn }) => {
             'el nen no miente. los comandos tampoco.'
         ]
 
-        const frase = frases[Math.floor(Math.random() * frases.length)]
+        const frase =
+            frases[Math.floor(Math.random() * frases.length)]
 
         const seccionesTexto = Object.entries(grouped)
             .map(([tag, cmds]) => {
-                return `꧁ · ${tag.toUpperCase()} · ꧂\n${cmds.map(c => `  ⸸ ${c}`).join('\n')}`
+                return `꧁ · ${tag.toUpperCase()} · ꧂\n${cmds
+                    .map(c => `  ⸸ ${c}`)
+                    .join('\n')}`
             })
             .join('\n\n')
 
@@ -166,44 +184,63 @@ ${seccionesTexto}
 _— ${botname} · Araña Nº8 · no me molestes si no es urgente_ 🕷️
 `.trim()
 
-        const thumbUrl = 'https://files.catbox.moe/y47iw7.jpg'
+        const thumbUrl =
+            'https://files.catbox.moe/y47iw7.jpg'
 
         const thumbOriginal = await getBuffer(thumbUrl)
-        const thumbResized = await resizeThumbnail(thumbOriginal)
+        const thumbResized =
+            await resizeThumbnail(thumbOriginal)
 
-        const fakeDocument = Buffer.from(menuTexto, 'utf-8')
-
-        const prepared = await prepareWAMessageMedia(
-            {
-                document: fakeDocument,
-                mimetype: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                fileName: '🕷 Shizuku System.xlsx'
-            },
-            {
-                upload: conn.waUploadToServer
-            }
+        const fakeDocument = Buffer.from(
+            menuTexto,
+            'utf-8'
         )
 
-        const documentMessage = prepared.documentMessage
+        const prepared =
+            await prepareWAMessageMedia(
+                {
+                    document: fakeDocument,
+                    mimetype:
+                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    fileName:
+                        '🕷 Shizuku System.xlsx'
+                },
+                {
+                    upload: conn.waUploadToServer
+                }
+            )
 
-        documentMessage.fileName = '🕷 Shizuku System.xlsx'
-        documentMessage.title = '🕷 Shizuku System'
+        const documentMessage =
+            prepared.documentMessage
+
+        documentMessage.fileName =
+            '🕷 Shizuku System.xlsx'
+        documentMessage.title =
+            '🕷 Shizuku System'
         documentMessage.caption = menuTexto
-        documentMessage.mimetype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        documentMessage.mimetype =
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         documentMessage.pageCount = 0
-        documentMessage.jpegThumbnail = thumbResized
-        documentMessage.thumbnailWidth = 300
+        documentMessage.jpegThumbnail =
+            thumbResized
+
+        // Tamaño banner horizontal
+        documentMessage.thumbnailWidth = 700
         documentMessage.thumbnailHeight = 300
 
-        const waMsg = generateWAMessageFromContent(
-            m.chat,
-            {
-                documentMessage: proto.Message.DocumentMessage.fromObject(documentMessage)
-            },
-            {
-                userJid: conn.user?.id
-            }
-        )
+        const waMsg =
+            generateWAMessageFromContent(
+                m.chat,
+                {
+                    documentMessage:
+                        proto.Message.DocumentMessage.fromObject(
+                            documentMessage
+                        )
+                },
+                {
+                    userJid: conn.user?.id
+                }
+            )
 
         await conn.relayMessage(
             m.chat,
@@ -212,10 +249,11 @@ _— ${botname} · Araña Nº8 · no me molestes si no es urgente_ 🕷️
                 messageId: waMsg.key.id
             }
         )
-
     } catch (e) {
         console.error(e)
-        await m.reply('...algo falló. blinky tampoco lo entendió.')
+        await m.reply(
+            '...algo falló. blinky tampoco lo entendió.'
+        )
     }
 }
 
