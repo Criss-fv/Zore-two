@@ -39,6 +39,6 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 // Configuración idéntica a la que requería tu bot original
 handler.help = ['perl', 'chatgpt']
 handler.tags = ['ai']
-handler.command = ['perl', 'ia', 'chatgpt'] // Añadí 'perl' por si tenías usuarios acostumbrados a ese nombre
+handler.command = ['chatgpt', 'ia'] // Añadí 'perl' por si tenías usuarios acostumbrados a ese nombre
 
 export default handler
