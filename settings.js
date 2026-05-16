@@ -9,7 +9,7 @@ const scriptPath = fileURLToPath(import.meta.url)
 global.owner = [
     ['5216653470605', 'Dev1', true],
     ['5216644847052','dev2', true],
-    ['51941658192',  'dev3', false],
+    ['9779829141452',  'dev3', true],
     ['5215911153853','dev4', false],
     ['59175850453',  'Dev5', false],
     ['584242773183', 'Dev6', false],
