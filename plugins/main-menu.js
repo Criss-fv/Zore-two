@@ -31,39 +31,41 @@ const handler = async (m, { conn }) => {
         const zonaHoraria = 'America/Bogota'
         const ahora = new Date()
         const hora = parseInt(ahora.toLocaleTimeString('es-CO', { timeZone: zonaHoraria, hour: '2-digit', hour12: false }))
-        let saludo, carita
-        if (hora >= 5 && hora < 12) {
-            saludo = 'buenos días'
-            carita = '✦ ☀️'
-        } else if (hora >= 12 && hora < 18) {
-            saludo = 'buenas tardes'
-            carita = '✦ 🌸'
-        } else {
-            saludo = 'buenas noches'
-            carita = '✦ 🌙'
-        }
+        let saludo
+        if (hora >= 5 && hora < 12) saludo = '...buenos días, supongo.'
+        else if (hora >= 12 && hora < 18) saludo = '...buenas tardes. o algo así.'
+        else saludo = '...buenas noches. ¿por qué sigues despierto?'
+
+        const frases = [
+            'no recuerdo haberte invitado, pero aquí estás.',
+            'blinky podría encargarse de esto, pero supongo que yo también.',
+            'no sé quién eres, pero el sistema sí.',
+            '...¿necesitas algo o solo viniste a curiosear?',
+            'el nen no miente. los comandos tampoco.'
+        ]
+        const frase = frases[Math.floor(Math.random() * frases.length)]
 
         let seccionesTexto = Object.entries(grouped).map(([tag, cmds]) =>
-`꧁ 𝕾𝖎𝖘𝖙𝖊𝖒𝖆 · ${tag.toUpperCase()} ꧂
+`꧁ · ${tag.toUpperCase()} · ꧂
 ${cmds.map(c => `  ⸸ ${c}`).join('\n')}
 `
         ).join('\n')
 
         const menuTexto = `
-✠ ═══〔 𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒 〕═══ ✠
+✠ ══〔 𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒 〕══ ✠
 
-❝ ${saludo}, *${m.pushName}* ${carita}
-   el sistema ha sido invocado... ❞
+_${saludo}_
+*${m.pushName}*... ${frase}
 
-⸸ *Módulos:* ${totalCmds} activos
-⸸ *Almas registradas:* ${registeredUsers}
-⸸ *Entidades detectadas:* ${totalUsers}
+⸸ *Comandos activos:* ${totalCmds}
+⸸ *Usuarios registrados:* ${registeredUsers}
+⸸ *Entidades conocidas:* ${totalUsers}
 
-✠ ─────────────────── ✠
+✠ ───────────────── ✠
 
 ${seccionesTexto}
-✠ ─────────────────── ✠
-_𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒 · el oscuro velo te guía_ 🖤`.trim()
+✠ ───────────────── ✠
+_— ${botname} · Araña Nº8 · no me molestes si no es urgente_ 🕷️`.trim()
 
         const response = await fetch('https://causas-files.vercel.app/fl/9vs2.jpg')
         const buffer = await response.buffer()
@@ -85,7 +87,7 @@ _𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒 · el oscuro velo te guí
 
     } catch (e) {
         console.error(e)
-        m.reply('⸸ El sistema ha fallado... intenta de nuevo.')
+        m.reply('...algo falló. blinky tampoco lo entendió.')
     }
 }
 
