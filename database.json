@@ -42,7 +42,8 @@
     "mode": "public",
     "welcome": true,
     "antilink": false,
-    "antispam": false
+    "antispam": false,
+    "sinprefix": true
   },
   "stats": {
     "totalCommands": 0,
