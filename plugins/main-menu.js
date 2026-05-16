@@ -4,7 +4,8 @@ import { database } from '../lib/database.js'
 
 const handler = async (m, { conn }) => {
     try {
-        const botname = global.botname || global.botName || 'Zero Two'
+        const botname = global.botname || global.botName || 'Shizuku'
+
         const pluginFiles = fs.readdirSync('./plugins').filter(file => file.endsWith('.js'))
         const grouped = {}
         for (const file of pluginFiles) {
@@ -27,60 +28,56 @@ const handler = async (m, { conn }) => {
         const totalUsers = Object.keys(database.data.users || {}).length
         const registeredUsers = Object.values(database.data.users || {}).filter(u => u.registered).length
 
-        let seccionesTexto = Object.entries(grouped).map(([tag, cmds]) =>
-`𖤐 *${tag.toUpperCase()}*
-${cmds.map(c => `  ꕦ ${c}`).join('\n')}
-`
-        ).join('\n')
-
         const zonaHoraria = 'America/Bogota'
         const ahora = new Date()
         const hora = parseInt(ahora.toLocaleTimeString('es-CO', { timeZone: zonaHoraria, hour: '2-digit', hour12: false }))
         let saludo, carita
         if (hora >= 5 && hora < 12) {
             saludo = 'buenos días'
-            carita = '(＊^▽^＊) ☀️'
+            carita = '✦ ☀️'
         } else if (hora >= 12 && hora < 18) {
             saludo = 'buenas tardes'
-            carita = '(｡•̀ᴗ-)✧ 🌸'
+            carita = '✦ 🌸'
         } else {
             saludo = 'buenas noches'
-            carita = '(◕‿◕✿) 🌙'
+            carita = '✦ 🌙'
         }
 
-        let menuTexto = `𖤐 ❖ 𝐙𝐄𝐑𝐎 𝐓𝐖𝐎'𝐒 𝐌𝐄𝐍𝐔 ❖ 𖤐
-❝ ¡Hola *${m.pushName}*, ${saludo}~! ${carita}
-Soy *${botname}* y este es mi menú,
-más te vale usarlo bien... hmph 💗 ❞
-ꙮ *Comandos:* ${totalCmds} disponibles
-ꙮ *Usuarios:* ${totalUsers} conocidos
-ꙮ *Registrados:* ${registeredUsers} darlings
+        let seccionesTexto = Object.entries(grouped).map(([tag, cmds]) =>
+`꧁ 𝕾𝖎𝖘𝖙𝖊𝖒𝖆 · ${tag.toUpperCase()} ꧂
+${cmds.map(c => `  ⸸ ${c}`).join('\n')}
+`
+        ).join('\n')
+
+        const menuTexto = `
+✠ ═══〔 𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒 〕═══ ✠
+
+❝ ${saludo}, *${m.pushName}* ${carita}
+   el sistema ha sido invocado... ❞
+
+⸸ *Módulos:* ${totalCmds} activos
+⸸ *Almas registradas:* ${registeredUsers}
+⸸ *Entidades detectadas:* ${totalUsers}
+
+✠ ─────────────────── ✠
+
 ${seccionesTexto}
-𖤐 *~Zero Two* 🌸 (´｡• ᵕ •｡\`)`.trim()
+✠ ─────────────────── ✠
+_𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒 · el oscuro velo te guía_ 🖤`.trim()
 
         const response = await fetch('https://causas-files.vercel.app/fl/9vs2.jpg')
         const buffer = await response.buffer()
 
-        // Primero manda la foto
         await conn.sendMessage(m.chat, {
             image: buffer,
             caption: menuTexto,
-            mentions: [m.sender]
-        }, { quoted: m })
-
-        // Luego el documento falso PDF
-        await conn.sendMessage(m.chat, {
-            document: buffer,
-            mimetype: 'application/pdf',
-            fileName: `『 Zero Two Menu 』.pdf`,
-            fileLength: 2199023255552,
-            pageCount: 2026,
+            mentions: [m.sender],
             contextInfo: {
                 isForwarded: true,
                 forwardingScore: 999,
                 forwardedNewsletterMessageInfo: {
                     newsletterJid: '120363404822730259@newsletter',
-                    newsletterName: '𝐙𝐄𝐑𝐎 𝐓𝐖𝐎',
+                    newsletterName: '𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒',
                     serverMessageId: -1
                 }
             }
@@ -88,7 +85,7 @@ ${seccionesTexto}
 
     } catch (e) {
         console.error(e)
-        m.reply('💔 Darling, algo salió mal al generar el menú... prueba de nuevo~')
+        m.reply('⸸ El sistema ha fallado... intenta de nuevo.')
     }
 }
 
