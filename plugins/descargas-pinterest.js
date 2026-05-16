@@ -33,57 +33,60 @@ async function sendAlbumMessage(conn, jid, medias, options = {}) {
     return album;
 }
 
-const handler = async (m, { conn, text, usedPrefix, command }) => {
+const handler = async (m, { conn, args, usedPrefix, command }) => {
     const prefix = usedPrefix || global.prefix || '.'
-    const cmd = Array.isArray(command) ? command[0] : (command || 'pinterest')
+    const cmd = typeof command === 'string' ? command : 'pinterest'
 
-    if (!text) return m.reply(
+    // Obtener texto desde args en vez de text
+    const query = args.join(' ').trim()
+
+    if (!query) return m.reply(
         `⸸ *${global.botName}* · Buscador\n\n` +
         `...necesito saber qué buscar.\n` +
         `📌 Uso: *${prefix}${cmd} <búsqueda>*\n` +
         `Ejemplo: *${prefix}${cmd} Shizuku HxH*`
-    );
+    )
 
-    await m.react('⏳');
+    await m.react('⏳')
 
     try {
         const res = await fetch(
-            `https://api.alyacore.xyz/search/pinterest?query=${encodeURIComponent(text)}&key=Duarte-zz12`
-        );
+            `https://api.alyacore.xyz/search/pinterest?query=${encodeURIComponent(query)}&key=Duarte-zz12`
+        )
 
-        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`)
 
-        const data = await res.json();
+        const data = await res.json()
 
-        if (!data.status || data.status !== true || !Array.isArray(data.data) || data.data.length < 2) {
-            await m.react('❌');
-            return m.reply('⸸ ...no encontré suficientes imágenes. intenta con otra búsqueda.');
+        if (!data.status || !Array.isArray(data.data) || data.data.length < 2) {
+            await m.react('❌')
+            return m.reply('⸸ ...no encontré suficientes imágenes. intenta con otra búsqueda.')
         }
 
         const images = data.data.slice(0, 10).map(img => ({
             type: 'image',
             data: { url: img.hd }
-        }));
+        }))
 
         const caption =
             `✠ ══〔 𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒 〕══ ✠\n\n` +
-            `⸸ *Búsqueda:* ${text}\n` +
+            `⸸ *Búsqueda:* ${query}\n` +
             `⸸ *Resultados:* ${images.length} imágenes\n\n` +
-            `_...blinky las recolectó. de nada._ 🕷️`;
+            `_...blinky las recolectó. de nada._ 🕷️`
 
-        await sendAlbumMessage(conn, m.chat, images, { caption, quoted: m });
-        await m.react('✅');
+        await sendAlbumMessage(conn, m.chat, images, { caption, quoted: m })
+        await m.react('✅')
 
     } catch (e) {
-        console.error('Error pinterest:', e);
-        await m.react('❌');
-        m.reply(`⸸ ...algo falló. blinky tampoco pudo (${e.message})`);
+        console.error('Error pinterest:', e)
+        await m.react('❌')
+        m.reply(`⸸ ...algo falló. blinky tampoco pudo (${e.message})`)
     }
-};
+}
 
-handler.help = ['pinterest <búsqueda>'];
-handler.tags = ['buscador'];
-handler.command = ['pinterest', 'pin'];
-handler.register = true;
+handler.help = ['pinterest <búsqueda>']
+handler.tags = ['buscador']
+handler.command = ['pinterest', 'pin']
+handler.register = true
 
-export default handler;
+export default handler
