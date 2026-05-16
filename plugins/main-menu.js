@@ -1,4 +1,6 @@
 import fs from 'fs'
+import path from 'path'
+import { pathToFileURL } from 'url'
 import fetch from 'node-fetch'
 import { database } from '../lib/database.js'
 
@@ -6,32 +8,56 @@ const handler = async (m, { conn }) => {
     try {
         const botname = global.botname || global.botName || 'Shizuku'
 
-        const pluginFiles = fs.readdirSync('./plugins').filter(file => file.endsWith('.js'))
+        const pluginDir = path.resolve('./plugins')
+        const pluginFiles = fs
+            .readdirSync(pluginDir)
+            .filter(file => file.endsWith('.js'))
+
         const grouped = {}
+
         for (const file of pluginFiles) {
             try {
-                const plugin = (await import(`../plugins/${file}`)).default
+                const filePath = path.join(pluginDir, file)
+                const plugin = (await import(`${pathToFileURL(filePath).href}?update=${Date.now()}`)).default
+
                 const tags = plugin?.tags || ['misc']
-                const cmd = plugin?.command?.[0] || file.replace('.js', '')
+                const commands = Array.isArray(plugin?.command)
+                    ? plugin.command
+                    : plugin?.command
+                        ? [plugin.command]
+                        : [file.replace('.js', '')]
+
+                const cmd = commands[0]
+
                 for (const tag of tags) {
                     if (!grouped[tag]) grouped[tag] = []
                     grouped[tag].push(cmd)
                 }
             } catch {
                 const cmd = file.replace('.js', '')
-                if (!grouped['misc']) grouped['misc'] = []
-                grouped['misc'].push(cmd)
+
+                if (!grouped.misc) grouped.misc = []
+                grouped.misc.push(cmd)
             }
         }
 
         const totalCmds = Object.values(grouped).flat().length
-        const totalUsers = Object.keys(database.data.users || {}).length
-        const registeredUsers = Object.values(database.data.users || {}).filter(u => u.registered).length
+        const users = database?.data?.users || {}
+        const totalUsers = Object.keys(users).length
+        const registeredUsers = Object.values(users).filter(u => u?.registered).length
 
         const zonaHoraria = 'America/Bogota'
         const ahora = new Date()
-        const hora = parseInt(ahora.toLocaleTimeString('es-CO', { timeZone: zonaHoraria, hour: '2-digit', hour12: false }))
+        const hora = parseInt(
+            ahora.toLocaleTimeString('es-CO', {
+                timeZone: zonaHoraria,
+                hour: '2-digit',
+                hour12: false
+            })
+        )
+
         let saludo
+
         if (hora >= 5 && hora < 12) saludo = '...buenos días, supongo.'
         else if (hora >= 12 && hora < 18) saludo = '...buenas tardes. o algo así.'
         else saludo = '...buenas noches. ¿por qué sigues despierto?'
@@ -43,19 +69,21 @@ const handler = async (m, { conn }) => {
             '...¿necesitas algo o solo viniste a curiosear?',
             'el nen no miente. los comandos tampoco.'
         ]
+
         const frase = frases[Math.floor(Math.random() * frases.length)]
 
-        let seccionesTexto = Object.entries(grouped).map(([tag, cmds]) =>
-`꧁ · ${tag.toUpperCase()} · ꧂
-${cmds.map(c => `  ⸸ ${c}`).join('\n')}
-`
-        ).join('\n')
+        const seccionesTexto = Object.entries(grouped)
+            .map(([tag, cmds]) => {
+                return `꧁ · ${tag.toUpperCase()} · ꧂
+${cmds.map(c => `  ⸸ ${c}`).join('\n')}`
+            })
+            .join('\n\n')
 
         const menuTexto = `
 ✠ ══〔 𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒 〕══ ✠
 
 _${saludo}_
-*${m.pushName}*... ${frase}
+*${m.pushName || 'Usuario'}*... ${frase}
 
 ⸸ *Comandos activos:* ${totalCmds}
 ⸸ *Usuarios registrados:* ${registeredUsers}
@@ -64,38 +92,44 @@ _${saludo}_
 ✠ ───────────────── ✠
 
 ${seccionesTexto}
+
 ✠ ───────────────── ✠
-_— ${botname} · Araña Nº8 · no me molestes si no es urgente_ 🕷️`.trim()
+_— ${botname} · Araña Nº8 · no me molestes si no es urgente_ 🕷️
+`.trim()
 
-        const response = await fetch('https://causas-files.vercel.app/fl/9vs2.jpg')
-        const buffer = await response.buffer()
+        const thumbUrl = 'https://causas-files.vercel.app/fl/9vs2.jpg'
+        const thumbResponse = await fetch(thumbUrl)
 
-        // Documento falso con imagen como thumbnail (efecto igual al screenshot)
-        await conn.sendMessage(m.chat, {
-            document: buffer,
-            mimetype: 'image/jpeg',
-            fileName: `𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒`,
-            fileLength: 1099511627776, // 1.0 TB falso
-            caption: menuTexto,
-            mentions: [m.sender],
-            contextInfo: {
-                isForwarded: true,
-                forwardingScore: 999,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: global.newsletterJid || '120363401404146384@newsletter',
-                    newsletterName: global.newsletterName || '🕷️ 𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒 🕷️',
-                    serverMessageId: -1
-                }
-            }
-        }, { quoted: m })
+        if (!thumbResponse.ok) {
+            throw new Error(`No se pudo descargar la thumbnail: ${thumbResponse.status}`)
+        }
+
+        const thumbBuffer = Buffer.from(await thumbResponse.arrayBuffer())
+
+        const fakeDocument = Buffer.from(menuTexto, 'utf-8')
+
+        await conn.sendMessage(
+            m.chat,
+            {
+                document: fakeDocument,
+                mimetype: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                fileName: '🕷 Shizuku System.xlsx',
+                fileLength: 1099511627776,
+                jpegThumbnail: thumbBuffer,
+                caption: menuTexto,
+                mentions: [m.sender]
+            },
+            { quoted: m }
+        )
 
     } catch (e) {
         console.error(e)
-        m.reply('...algo falló. blinky tampoco lo entendió.')
+        await m.reply('...algo falló. blinky tampoco lo entendió.')
     }
 }
 
 handler.help = ['menu']
 handler.tags = ['main']
 handler.command = ['menu', 'help', 'ayuda']
+
 export default handler
