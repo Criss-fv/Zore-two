@@ -57,7 +57,6 @@ const similarity = (a, b) => {
     return Math.floor((matches / Math.max(a.length, b.length)) * 100)
 }
 
-// 🟢 Palabras ignoradas para no tratar como comandos sin prefijo
 const IGNORED_WORDS = ['hola', 'hey', 'ok', 'vale', 'sí', 'no', 'si', 'buenas', 'buenos', 'gracias', 'graciasbot']
 
 const eventsLoadedFor = new WeakSet()
@@ -80,15 +79,12 @@ export const loadEvents = async (conn) => {
         try {
             const url = pathToFileURL(join(eventsPath, file)).href
             const mod = await import(url)
-
             if (!mod.event || !mod.run) continue
-
             conn.ev.on(mod.event, (data) => {
                 const id = data?.id || data?.key?.remoteJid || null
                 if (mod.enabled && id && !mod.enabled(id)) return
                 mod.run(conn, data)
             })
-
         } catch {}
     }
 }
@@ -113,24 +109,13 @@ export const handler = async (m, conn, plugins) => {
 
             if (cmd && typeof cmd === 'string') {
                 const clean = cmd.trim()
-
                 if (clean) {
                     m.message = { conversation: clean }
                     m.text = clean
                     m.body = clean
-
-                    const senderId =
-                        m.participant ||
-                        m.key?.participant ||
-                        m.key?.remoteJid ||
-                        ''
-
+                    const senderId = m.participant || m.key?.participant || m.key?.remoteJid || ''
                     if (m.sender !== senderId) {
-                        Object.defineProperty(m, 'sender', {
-                            value: senderId,
-                            writable: true,
-                            configurable: true
-                        })
+                        Object.defineProperty(m, 'sender', { value: senderId, writable: true, configurable: true })
                     }
                 }
             }
@@ -148,13 +133,12 @@ export const handler = async (m, conn, plugins) => {
 
         if (!m.body) return
 
-        // 🎯 NUEVO SISTEMA: Con o sin prefijo
         let prefix = null
         let commandName = null
         let args = []
         let usedPrefix = null
 
-        // 🟢 OPCIÓN 1: Con prefijo (#, ., /, $)
+        // ── OPCIÓN 1: Con prefijo (#, ., /, $) ──────────────────────────────
         const detectedPrefix = getPrefix(m.body)
         if (detectedPrefix) {
             usedPrefix = detectedPrefix
@@ -165,43 +149,37 @@ export const handler = async (m, conn, plugins) => {
             prefix = detectedPrefix
         }
 
-        // 🟢 OPCIÓN 2: Sin prefijo (solo el nombre del comando)
-        // 🔒 SOLO si está habilitado en la BD (sinprefix on/off)
+        // ── OPCIÓN 2: Sin prefijo ────────────────────────────────────────────
         if (!prefix) {
-            // Verificar si sinprefix está habilitado globalmente o por usuario
-            const sinprefixEnabled = database.data?.settings?.sinprefix ?? true // Por defecto: ON
+            const sinprefixEnabled = database.data?.settings?.sinprefix ?? true
 
             if (sinprefixEnabled) {
                 const parts = m.body.trim().split(/ +/)
                 const firstWord = parts[0].toLowerCase()
 
-                // ❌ Ignorar palabras comunes que no son comandos
-                if (!IGNORED_WORDS.includes(firstWord)) {
-                    // Verificar si la primera palabra es un comando existente
-                    let isCommand = false
-                    for (const [, plugin] of plugins) {
-                        if (!plugin.command) continue
-                        const cmds = Array.isArray(plugin.command)
-                            ? plugin.command
-                            : plugin.command instanceof RegExp
-                                ? []
-                                : [plugin.command]
-                        if (cmds.map(c => c.toLowerCase()).includes(firstWord)) {
-                            isCommand = true
-                            commandName = firstWord
-                            args = parts.slice(1)
-                            prefix = '' // Sin prefijo
-                            usedPrefix = '' // Para mensajes
-                            break
-                        }
-                    }
+                if (IGNORED_WORDS.includes(firstWord)) return
 
-                    if (!isCommand) return // No es comando, ignorar
-                } else {
-                    return // Es palabra ignorada
+                let isCommand = false
+                for (const [, plugin] of plugins) {
+                    if (!plugin.command) continue
+                    const cmds = Array.isArray(plugin.command)
+                        ? plugin.command
+                        : plugin.command instanceof RegExp
+                            ? []
+                            : [plugin.command]
+                    if (cmds.map(c => c.toLowerCase()).includes(firstWord)) {
+                        isCommand = true
+                        commandName = firstWord
+                        args = parts.slice(1)
+                        prefix = ''
+                        usedPrefix = ''
+                        break
+                    }
                 }
+
+                if (!isCommand) return
             } else {
-                return // sinprefix está deshabilitado
+                return
             }
         }
 
@@ -253,8 +231,12 @@ export const handler = async (m, conn, plugins) => {
                 ? similares.map(s => `*${defaultPrefix}${s.cmd}* » *${s.score}%*`).join('\n')
                 : 'Sin resultados'
 
+            // Solo mostrar "comando no existe" si se usó prefijo
+            // Sin prefijo simplemente ignorar para no spamear
+            if (!usedPrefix && usedPrefix !== '') return
+
             return conn.sendMessage(m.chat, {
-                text: `El comando *(${defaultPrefix}${commandName})* no existe.\n- Use el comando *${defaultPrefix}menu* para ver los comandos.\n\n*Similares:*\n${sugerencias}`
+                text: `⸸ *${global.botName}*\n\nEl comando *(${defaultPrefix}${commandName})* no existe.\n- Usa *${defaultPrefix}menu* para ver los comandos.\n\n*Similares:*\n${sugerencias}`
             }, { quoted: m })
         }
 
@@ -270,27 +252,14 @@ export const handler = async (m, conn, plugins) => {
         if (isGroup) {
             try {
                 const groupMeta = await conn.groupMetadata(m.chat)
-
                 const clean = v => (v || '').split('@')[0].split(':')[0]
-
                 const senderNum = clean(m.sender)
                 const botNum = clean(conn.user.id)
-
-                const participant = groupMeta.participants.find(p => {
-                    const id = clean(p.jid || p.id)
-                    return id === senderNum
-                })
-
+                const participant = groupMeta.participants.find(p => clean(p.jid || p.id) === senderNum)
                 isAdmin = !!participant?.admin || isOwner
-
-                const botParticipant = groupMeta.participants.find(p => {
-                    const id = clean(p.jid || p.id)
-                    return id === botNum
-                })
-
+                const botParticipant = groupMeta.participants.find(p => clean(p.jid || p.id) === botNum)
                 isBotAdmin = !!botParticipant?.admin
-
-            } catch { }
+            } catch {}
         }
 
         if (!database.data.users) database.data.users = {}
@@ -299,75 +268,72 @@ export const handler = async (m, conn, plugins) => {
 
         if (!database.data.users[m.sender]) {
             database.data.users[m.sender] = {
-                registered: false,
-                premium: false,
-                banned: false,
-                warning: 0,
-                exp: 0,
-                level: 1,
-                limit: 20,
-                lastclaim: 0,
-                registered_time: 0,
-                name: m.pushName || '',
-                age: null
+                registered: false, premium: false, banned: false,
+                warning: 0, exp: 0, level: 1, limit: 20,
+                lastclaim: 0, registered_time: 0,
+                name: m.pushName || '', age: null
             }
             await database.save()
         }
 
         if (isGroup && !database.data.groups[m.chat]) {
-            database.data.groups[m.chat] = {
-                modoadmin: false,
-                muted: []
-            }
+            database.data.groups[m.chat] = { modoadmin: false, muted: [] }
             await database.save()
         }
 
         const who = await resolveWho(m, conn, args)
 
         if (isGroup && database.data.groups[m.chat]?.modoadmin && !isAdmin && !isOwner) {
-            return m.reply('⚙️ *𝖅0𝕽𝕿 𝕾𝖄𝕾𝕿𝕰𝕸𝕰*\n\n🔒 *MODO ADMIN ACTIVO*\n_Zero Two está temporalmente restringida. Solo los administradores pueden usar comandos._')
+            return m.reply(
+                `✠ ══〔 𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒 〕══ ✠\n\n` +
+                `🔒 *Modo Admin activo.*\n_Solo administradores pueden invocar comandos._`
+            )
         }
 
         if (database.data.users[m.sender]?.banned && !isOwner) {
-            return m.reply('🚫 *ESTÁS BANEADO*\nNo puedes usar los comandos del bot.')
+            return m.reply('⸸ ...estás baneado. no puedes usar el sistema.')
         }
 
         if (cmd.rowner && !isROwner) {
-            return m.reply('👑 *ACCESO DENEGADO*\nEste comando solo puede ser ejecutado por el creador principal.')
+            return m.reply('⸸ ...acceso denegado. solo el creador principal puede hacer eso.')
         }
 
         if (cmd.owner && !isOwner) {
-            return m.reply('👑 *ACCESO RESTRINGIDO*\nEste comando solo puede ser ejecutado por mi creador.')
+            return m.reply('⸸ ...ese comando no es para ti. solo mis creadores.')
         }
 
         if (cmd.premium && !isPremium) {
-            return m.reply('💎 *USUARIO PREMIUM*\nEste comando es exclusivo para miembros Premium.')
+            return m.reply('⸸ ...comando premium. no tienes acceso.')
         }
 
         if (cmd.register && !isRegistered) {
-            return m.reply(`📝 *REGISTRO REQUERIDO*\nDebes registrarte para usar este comando.\n\n> Usa: *${usedPrefix || '.'}reg nombre.edad*\n> Ejemplo: *${usedPrefix || '.'}reg Juan.25*`)
+            return m.reply(
+                `⸸ ...necesitas registrarte primero.\n\n` +
+                `📌 Usa: *${usedPrefix || '.'}reg nombre.edad*\n` +
+                `Ejemplo: *${usedPrefix || '.'}reg Kurapika.17*`
+            )
         }
 
         if (cmd.group && !isGroup) {
-            return m.reply('🏢 *SOLO GRUPOS*\nEste comando solo está habilitado para grupos.')
+            return m.reply('⸸ ...ese comando es solo para grupos.')
         }
 
         if (cmd.admin && !isAdmin) {
-            return m.reply('👮 *ERES ADMIN?*\nEste comando es solo para administradores del grupo.')
+            return m.reply('⸸ ...necesitas ser admin del grupo para eso.')
         }
 
         if (cmd.botAdmin && !isBotAdmin) {
-            return m.reply('🤖 *ERROR DE PERMISOS*\nNecesito ser administrador del grupo para ejecutar esta acción.')
+            return m.reply('⸸ ...necesito ser admin del grupo para ejecutar eso.')
         }
 
         if (cmd.private && isGroup) {
-            return m.reply('💬 *CHAT PRIVADO*\nEscríbeme al privado para usar este comando.')
+            return m.reply('⸸ ...escríbeme al privado para usar ese comando.')
         }
 
         if (cmd.limit && !isPremium && !isOwner) {
             const userLimit = database.data.users[m.sender].limit || 0
             if (userLimit < 1) {
-                return m.reply(`⚠️ *SIN LÍMITES*\nSe han agotado tus límites diarios.\n💎 Los usuarios premium tienen límites ilimitados.`)
+                return m.reply('⸸ ...se agotaron tus límites diarios. regresa mañana.')
             }
             database.data.users[m.sender].limit -= 1
             await database.save()
@@ -377,56 +343,34 @@ export const handler = async (m, conn, plugins) => {
             await cmd(m, {
                 conn,
                 args,
-                isOwner,
-                isROwner,
-                isPremium,
-                isRegistered,
-                isAdmin,
-                isBotAdmin,
-                isGroup,
+                text: args.join(' '),   // ← los plugins que usen `text` también funcionan
+                usedPrefix: usedPrefix ?? '.',
+                command: commandName,
+                isOwner, isROwner, isPremium, isRegistered,
+                isAdmin, isBotAdmin, isGroup,
                 who,
                 db: database.data,
-                prefix: usedPrefix || '.',
+                prefix: usedPrefix ?? '.',
                 plugins
             })
         } catch (e) {
             const message = e?.message || String(e)
             const stackLines = e?.stack?.split('\n') || []
-
-            let file = null
-            let line = null
-
+            let file = null, line = null
             for (const l of stackLines) {
                 const match = l.match(/\((.*plugins.*):(\d+):(\d+)\)/)
-                if (match) {
-                    file = match[1]
-                    line = match[2]
-                    break
-                }
+                if (match) { file = match[1]; line = match[2]; break }
             }
-
-            let debug = `
-❌ *ERROR EN COMANDO*
-
-📌 Comando: ${usedPrefix || '.'}${commandName}
-
-🧾 Mensaje:
-${message.slice(0, 500)}
-
-📍 Archivo: ${file || 'desconocido'}
-📍 Línea: ${line || '?'}
-`.trim()
-
+            const debug =
+                `⸸ *Error en comando*\n\n` +
+                `📌 Comando: ${usedPrefix || '.'}${commandName}\n` +
+                `🧾 ${message.slice(0, 500)}\n` +
+                `📍 ${file || 'desconocido'}:${line || '?'}`
             console.log(chalk.red(debug))
-
             if (m?.reply) m.reply(debug)
         }
 
     } catch (e) {
-        let msg = e?.message || String(e)
-
-        if (m?.reply) {
-            m.reply(`❌ *ERROR GLOBAL*\n\n🧾 ${msg.slice(0, 400)}`)
-        }
+        if (m?.reply) m.reply(`⸸ *Error global*\n\n🧾 ${(e?.message || String(e)).slice(0, 400)}`)
     }
 }
