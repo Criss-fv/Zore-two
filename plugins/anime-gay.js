@@ -58,7 +58,7 @@ const handler = async (m, { conn, db }) => {
         // 3. Enviar el resultado
         await conn.sendMessage(m.chat, { 
             video: { url: 'https://files.catbox.moe/7lvpbf.mp4' }, 
-            gifPlayback: true,
+            gifPlayback: false,
             caption: `🏳️‍🌈 *RESULTADO FINAL*\n\n🧐 @${who.split('@')[0]} (*${name}*) es *${porcentaje}%* Gay.\n\n_${frase}_`, 
             mentions: [who]
         }, { quoted: m })
