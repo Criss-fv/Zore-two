@@ -60,7 +60,6 @@ ${seccionesTexto}
 
         const response = await fetch('https://causas-files.vercel.app/fl/9vs2.jpg')
         const buffer = await response.buffer()
-        const base64 = buffer.toString('base64')
 
         await conn.sendMessage(m.chat, {
             document: buffer,
@@ -73,14 +72,6 @@ ${seccionesTexto}
             contextInfo: {
                 isForwarded: true,
                 forwardingScore: 999,
-                externalAdReply: {
-                    title: '𝐙𝐄𝐑𝐎 𝐓𝐖𝐎',
-                    body: 'darling~ 💗',
-                    mediaType: 1,
-                    thumbnail: base64,
-                    renderLargerThumbnail: true,
-                    sourceUrl: 'https://whatsapp.com/channel/0029Vb6p68rF6smrH4Jeay3Y'
-                },
                 forwardedNewsletterMessageInfo: {
                     newsletterJid: '120363404822730259@newsletter',
                     newsletterName: '𝐙𝐄𝐑𝐎 𝐓𝐖𝐎',
