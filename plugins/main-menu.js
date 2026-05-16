@@ -9,12 +9,13 @@ import {
 } from '@whiskeysockets/baileys'
 import { database } from '../lib/database.js'
 
-// Función añadida para calcular el tiempo activo
+// Función para calcular el tiempo activo
 function formatUptime(seconds) {
     let d = Math.floor(seconds / (3600 * 24))
-    let h = Math.floor(seconds % (3600 * 24) / 3600)
-    let m = Math.floor(seconds % 3600 / 60)
+    let h = Math.floor((seconds % (3600 * 24)) / 3600)
+    let m = Math.floor((seconds % 3600) / 60)
     let s = Math.floor(seconds % 60)
+
     return `${d}d ${h}h ${m}m ${s}s`
 }
 
@@ -28,6 +29,7 @@ async function getBuffer(url) {
     return Buffer.from(await res.arrayBuffer())
 }
 
+// Thumbnail corregida tipo banner compacto
 async function resizeThumbnail(buffer) {
     try {
         const jimpModule = await import('jimp')
@@ -35,15 +37,15 @@ async function resizeThumbnail(buffer) {
 
         const img = await Jimp.read(buffer)
 
-        // Banner horizontal compacto tipo menú Choso
-        if (typeof img.contain === 'function') {
-            img.contain(700, 300)
+        // Compacto tipo menú Choso pero compatible con WhatsApp
+        if (typeof img.cover === 'function') {
+            img.cover(400, 180)
         } else {
-            img.resize(700, 300)
+            img.resize(400, 180)
         }
 
         if (typeof img.quality === 'function') {
-            img.quality(90)
+            img.quality(85)
         }
 
         if (typeof img.getBufferAsync === 'function') {
@@ -53,7 +55,7 @@ async function resizeThumbnail(buffer) {
         return await img.getBuffer('image/jpeg')
     } catch (e) {
         console.warn(
-            'No se pudo redimensionar thumbnail, usando buffer original:',
+            'No se pudo redimensionar thumbnail:',
             e.message
         )
         return buffer
@@ -62,18 +64,28 @@ async function resizeThumbnail(buffer) {
 
 const handler = async (m, { conn }) => {
     try {
-        const botname = global.botname || global.botName || 'Shizuku'
+        const botname =
+            global.botname ||
+            global.botName ||
+            'Shizuku'
 
-        const pluginDir = path.resolve('./plugins')
+        const pluginDir =
+            path.resolve('./plugins')
+
         const pluginFiles = fs
             .readdirSync(pluginDir)
-            .filter(file => file.endsWith('.js'))
+            .filter(file =>
+                file.endsWith('.js')
+            )
 
         const grouped = {}
 
         for (const file of pluginFiles) {
             try {
-                const filePath = path.join(pluginDir, file)
+                const filePath = path.join(
+                    pluginDir,
+                    file
+                )
 
                 const plugin = (
                     await import(
@@ -81,66 +93,110 @@ const handler = async (m, { conn }) => {
                     )
                 ).default
 
-                const tags = plugin?.tags || ['misc']
+                const tags =
+                    plugin?.tags || ['misc']
 
-                const commands = Array.isArray(plugin?.command)
-                    ? plugin.command
-                    : plugin?.command
-                      ? [plugin.command]
-                      : [file.replace('.js', '')]
+                const commands =
+                    Array.isArray(
+                        plugin?.command
+                    )
+                        ? plugin.command
+                        : plugin?.command
+                        ? [plugin.command]
+                        : [
+                              file.replace(
+                                  '.js',
+                                  ''
+                              )
+                          ]
 
                 const cmd = commands[0]
 
                 for (const tag of tags) {
-                    if (!grouped[tag]) grouped[tag] = []
+                    if (!grouped[tag])
+                        grouped[tag] = []
+
                     grouped[tag].push(cmd)
                 }
             } catch {
-                const cmd = file.replace('.js', '')
+                const cmd = file.replace(
+                    '.js',
+                    ''
+                )
 
-                if (!grouped.misc) grouped.misc = []
+                if (!grouped.misc)
+                    grouped.misc = []
+
                 grouped.misc.push(cmd)
             }
         }
 
-        const totalCmds = Object.values(grouped).flat().length
-        const users = database?.data?.users || {}
-        const totalUsers = Object.keys(users).length
-        const registeredUsers = Object.values(users).filter(
-            u => u?.registered
-        ).length
+        const totalCmds =
+            Object.values(grouped)
+                .flat().length
 
-        // Zona horaria
-        const zonaHoraria = 'America/Tijuana'
+        const users =
+            database?.data?.users || {}
+
+        const totalUsers =
+            Object.keys(users).length
+
+        const registeredUsers =
+            Object.values(users).filter(
+                u => u?.registered
+            ).length
+
+        const zonaHoraria =
+            'America/Tijuana'
+
         const ahora = new Date()
 
-        const horaExacta = ahora.toLocaleTimeString('es-MX', {
-            timeZone: zonaHoraria,
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true
-        })
+        const horaExacta =
+            ahora.toLocaleTimeString(
+                'es-MX',
+                {
+                    timeZone:
+                        zonaHoraria,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second:
+                        '2-digit',
+                    hour12: true
+                }
+            )
 
-        const uptimeStr = formatUptime(process.uptime())
+        const uptimeStr =
+            formatUptime(
+                process.uptime()
+            )
 
         const hora = parseInt(
-            ahora.toLocaleTimeString('es-MX', {
-                timeZone: zonaHoraria,
-                hour: '2-digit',
-                hour12: false
-            })
+            ahora.toLocaleTimeString(
+                'es-MX',
+                {
+                    timeZone:
+                        zonaHoraria,
+                    hour: '2-digit',
+                    hour12: false
+                }
+            )
         )
 
         let saludo
 
-        if (hora >= 5 && hora < 12)
-            saludo = '...buenos días, supongo.'
-        else if (hora >= 12 && hora < 18)
-            saludo = '...buenas tardes. o algo así.'
-        else
+        if (hora >= 5 && hora < 12) {
+            saludo =
+                '...buenos días, supongo.'
+        } else if (
+            hora >= 12 &&
+            hora < 18
+        ) {
+            saludo =
+                '...buenas tardes. o algo así.'
+        } else {
             saludo =
                 '...buenas noches. ¿por qué sigues despierto?'
+        }
 
         const frases = [
             'no recuerdo haberte invitado, pero aquí estás.',
@@ -151,15 +207,30 @@ const handler = async (m, { conn }) => {
         ]
 
         const frase =
-            frases[Math.floor(Math.random() * frases.length)]
+            frases[
+                Math.floor(
+                    Math.random() *
+                        frases.length
+                )
+            ]
 
-        const seccionesTexto = Object.entries(grouped)
-            .map(([tag, cmds]) => {
-                return `꧁ · ${tag.toUpperCase()} · ꧂\n${cmds
-                    .map(c => `  ⸸ ${c}`)
-                    .join('\n')}`
-            })
-            .join('\n\n')
+        const seccionesTexto =
+            Object.entries(
+                grouped
+            )
+                .map(
+                    ([tag, cmds]) => {
+                        return `꧁ · ${tag.toUpperCase()} · ꧂\n${cmds
+                            .map(
+                                c =>
+                                    `  ⸸ ${c}`
+                            )
+                            .join(
+                                '\n'
+                            )}`
+                    }
+                )
+                .join('\n\n')
 
         const menuTexto = `
 ✠ ══〔 𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒 〕══ ✠
@@ -187,26 +258,35 @@ _— ${botname} · Araña Nº8 · no me molestes si no es urgente_ 🕷️
         const thumbUrl =
             'https://files.catbox.moe/y47iw7.jpg'
 
-        const thumbOriginal = await getBuffer(thumbUrl)
-        const thumbResized =
-            await resizeThumbnail(thumbOriginal)
+        const thumbOriginal =
+            await getBuffer(
+                thumbUrl
+            )
 
-        const fakeDocument = Buffer.from(
-            menuTexto,
-            'utf-8'
-        )
+        const thumbResized =
+            await resizeThumbnail(
+                thumbOriginal
+            )
+
+        const fakeDocument =
+            Buffer.from(
+                menuTexto,
+                'utf-8'
+            )
 
         const prepared =
             await prepareWAMessageMedia(
                 {
-                    document: fakeDocument,
+                    document:
+                        fakeDocument,
                     mimetype:
                         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                     fileName:
                         '🕷 Shizuku System.xlsx'
                 },
                 {
-                    upload: conn.waUploadToServer
+                    upload:
+                        conn.waUploadToServer
                 }
             )
 
@@ -215,18 +295,24 @@ _— ${botname} · Araña Nº8 · no me molestes si no es urgente_ 🕷️
 
         documentMessage.fileName =
             '🕷 Shizuku System.xlsx'
+
         documentMessage.title =
             '🕷 Shizuku System'
-        documentMessage.caption = menuTexto
+
+        documentMessage.caption =
+            menuTexto
+
         documentMessage.mimetype =
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+
         documentMessage.pageCount = 0
+
         documentMessage.jpegThumbnail =
             thumbResized
 
-        // Tamaño banner horizontal
-        documentMessage.thumbnailWidth = 700
-        documentMessage.thumbnailHeight = 300
+        // Banner compacto visible
+        documentMessage.thumbnailWidth = 400
+        documentMessage.thumbnailHeight = 180
 
         const waMsg =
             generateWAMessageFromContent(
@@ -238,7 +324,8 @@ _— ${botname} · Araña Nº8 · no me molestes si no es urgente_ 🕷️
                         )
                 },
                 {
-                    userJid: conn.user?.id
+                    userJid:
+                        conn.user?.id
                 }
             )
 
@@ -246,11 +333,13 @@ _— ${botname} · Araña Nº8 · no me molestes si no es urgente_ 🕷️
             m.chat,
             waMsg.message,
             {
-                messageId: waMsg.key.id
+                messageId:
+                    waMsg.key.id
             }
         )
     } catch (e) {
         console.error(e)
+
         await m.reply(
             '...algo falló. blinky tampoco lo entendió.'
         )
@@ -259,6 +348,10 @@ _— ${botname} · Araña Nº8 · no me molestes si no es urgente_ 🕷️
 
 handler.help = ['menu']
 handler.tags = ['main']
-handler.command = ['menu', 'help', 'ayuda']
+handler.command = [
+    'menu',
+    'help',
+    'ayuda'
+]
 
 export default handler
