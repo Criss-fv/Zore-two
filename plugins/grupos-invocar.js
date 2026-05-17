@@ -31,7 +31,7 @@ const handler = async (m, { conn, args, isAdmin, isOwner }) => {
 }
 
 handler.help = ['invocar', 'invocar <texto>']
-handler.tags = ['group']
+handler.tags = ['grupo']
 handler.command = ['invocar', 'invocarwaifu']
 handler.group = true
 handler.admin = true
