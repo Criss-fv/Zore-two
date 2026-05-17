@@ -60,6 +60,3 @@ Escanea el código QR o genera tu código de emparejamiento desde la terminal pa
 <div align="center">
 𝕾𝕽𝕴𝖅𝖀𝕶𝖀 𝕾𝖄𝖾𝕿𝕰𝕸 🕷️ — *Infraestructura sólida entregada con éxito.*
 </div>
-```
-
-```
