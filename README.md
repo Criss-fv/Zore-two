@@ -1,10 +1,11 @@
-# 𝐙𝐄𝐑𝐎 𝐓𝐖𝐎 🌸
+```markdown
+# 𝕾𝕽𝕴𝖅𝖀𝕶𝖀 𝕾𝖄𝖾𝕿𝕰𝕸 🕷️
 
 <div align="center">
 
 ![Zero Two Banner](https://files.catbox.moe/9enbxk.jpg)
 
-*La waifu rosa con cuernos más peligrosa y cute – power by Aarom 💗*
+*El sistema automatizado más rápido y letal – Shizuku System 🖤*
 
 [![Canal](https://img.shields.io/badge/WhatsApp-Canal-25D366?style=for-the-badge&logo=whatsapp)](https://whatsapp.com/channel/0029Vb6p68rF6smrH4Jeay3Y)
 [![GitHub](https://img.shields.io/badge/GitHub-Repo-181717?style=for-the-badge&logo=github)](https://github.com/zoredevteam-ctrl/Zore-two.git)
@@ -14,23 +15,23 @@
 ---
 
 > [!IMPORTANT]
-> Este proyecto está en constante evolución, optimizando cada línea de código para ofrecer a la comunidad una experiencia única. Estamos comprometidos en construir un bot sólido, innovador y diferente. **[¡Únete a nuestro canal y sé parte del crecimiento de Zore Two!](https://whatsapp.com/channel/0029Vb6p68rF6smrH4Jeay3Y)**
+> Este proyecto está en constante evolución, optimizando cada línea de código para ofrecer a la comunidad una experiencia única. Estamos comprometidos en construir un bot sólido, innovador y diferente. **[¡Únete a nuestro canal y sé parte del crecimiento de Shizuku!](https://whatsapp.com/channel/0029Vb6p68rF6smrH4Jeay3Y)**
 
 ---
 
 ## Descripción <img src="https://camo.githubusercontent.com/d63d1e8469a49534c1d239a47c9817e65498ce994f3cdbef76a2df4237e4763d/68747470733a2f2f692e70696e696d672e636f6d2f6f726967696e616c732f37332f36392f36652f37333639366530323264663763643563623364393939633638373533363164642e676966" width="40"/>
 
-**Zore Two** es un bot multi-dispositivo para WhatsApp, construido desde cero con Baileys e inspirado en **Zero Two** de *Darling in the FranXX*. Trae comandos para descargas rápidas, utilidades y mucho más. ¡Darling, únete y no me dejes sola, o muerdo~ 🔥
+**Shizuku** es un bot multi-dispositivo para WhatsApp de alto rendimiento, optimizado al extremo para enviar multimedia en ráfagas paralelas ultrarrápidas y equipado con sistemas inteligentes anti-repetición. **Nota importante:** Este bot fue creado usando la base de Zore-two y ha sido rediseñado para ofrecer una infraestructura limpia, modular y veloz en entornos como Termux. 🕷️🔥
 
 ---
 
 ## ✨ Características ![Rainbow Cat](https://gist.githubusercontent.com/yazdipour/91dea3fdf97dba702ed89a6a1b9a98a7/raw/rainbowcat.gif)
 
 - 🍬 **Prefijo:** `.` `#` `/`
-- 📦 **Comandos por categorías:** menú, ping, stickers, descargas y más
-- 🔖 **Versión:** ^1.0 Latest
-- 🖼️ **Banner/Icono:** cámbialos con `.setbanner` / `.seticon`
-- 💾 **Sesión:** persistente con MultiFileAuthState
+- 📦 **Comandos por categorías:** menús limpios, ráfagas multimedia, pinterest, tiktok y herramientas avanzadas
+- 🔖 **Versión:** ^1.0 Latest (Shizuku Core)
+- 🖼️ **Banner/Icono:** cámbialos dinámicamente con `.setbanner` / `.seticon`
+- 💾 **Sesión:** persistente y segura con MultiFileAuthState
 
 ---
 
@@ -38,34 +39,29 @@
 
 **1. Clona el repositorio:**
 ```bash
-git clone https://github.com/zoredevteam-ctrl/Zore-two.git
+git clone [https://github.com/zoredevteam-ctrl/Zore-two.git](https://github.com/zoredevteam-ctrl/Zore-two.git)
 cd Zore-two
-```
 
+```
 **2. Instala dependencias:**
 ```bash
 npm install
-```
 
+```
 **3. Inicia el bot:**
 ```bash
 node index.js
+
 ```
-Escanea el QR o usa el código de emparejamiento para vincular.
-
----
-
+Escanea el código QR o genera tu código de emparejamiento desde la terminal para vincular.
 ## <img src="https://cdn3.emoji.gg/emojis/4045-crown.gif" width="50"/> Créditos
-
-- 👨‍💻 Power by **Aarom**
-- 🌸 Inspirado en **Zero Two** – *Darling in the FranXX*
-- 📚 Librería: **Baileys Multi Device**
-- <img src="https://cdn3.emoji.gg/emojis/4045-crown.gif" width="40"/> Colaborador principal: <a href="https://github.com/danielalejandrobasado-glitch"><img src="https://github.com/danielalejandrobasado-glitch.png" width="200"/></a>
-
----
-
+ * 👨‍💻 Base original: **Aarom** (Zore-two)
+ * 🌸 Modificaciones y Optimización: **Shizuku Dev**
+ * 📚 Librería principal: **Baileys Multi Device**
+ * <img src="https://cdn3.emoji.gg/emojis/4045-crown.gif" width="40"/> Colaborador principal: <a href="https://github.com/danielalejandrobasado-glitch"><img src="https://github.com/danielalejandrobasado-glitch.png" width="200"/></a>
 <div align="center">
-
-𝐙𝐄𝐑𝐎 𝐓𝐖𝐎 💗 — *No me dejes sola, ¿eh?*
-
+𝕾𝕽𝕴𝖅𝖀𝕶𝖀 𝕾𝖄𝖾𝕿𝕰𝕸 🕷️ — *Infraestructura sólida entregada con éxito.*
 </div>
+```
+
+```
