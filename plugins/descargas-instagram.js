@@ -110,5 +110,6 @@ let handler = async (m, { conn, args }) => {
 }
 
 handler.command = ['ig']
+handler.tags = ['descargas']
 
 export default handler
