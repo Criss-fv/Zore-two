@@ -33,7 +33,7 @@ let handler = async (m, { conn, prefix, isAdmin, isBotAdmin }) => {
 }
 
 handler.command = ['unmute']
-handler.tags = ['grupos']
+handler.tags = ['group']
 handler.group = true
 
 export default handler
