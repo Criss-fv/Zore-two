@@ -30,7 +30,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 }
 
 handler.help = ['traducir', 'translate']
-handler.tags = ['tools']
+handler.tags = ['herramientas']
 handler.command = ['traducir', 'translate', 'tr'] // Responde a #traducir, #translate o #tr
 handler.register = true
 
