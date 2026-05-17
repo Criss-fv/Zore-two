@@ -38,5 +38,19 @@
 
 **1. Clona el repositorio:**
 ```bash
-git clone [https://github.com/zoredevteam-ctrl/Zore-two.git](https://github.com/zoredevteam-ctrl/Zore-two.git)
+git clone https://github.com/zoredevteam-ctrl/Zore-two.git
 cd Zore-two
+```
+
+**2. Instala dependencias:**
+```bash
+npm install
+```
+
+**3. Inicia el bot:**
+```bash
+node index.js
+```
+Escanea el QR o usa el código de emparejamiento para vincular.
+
+---
