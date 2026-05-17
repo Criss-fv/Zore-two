@@ -51,42 +51,16 @@ npm install
 ```bash
 node index.js
 ```
-Escanea el QR o usa el código de emparejamiento para vincular.
-
----
-<img
-src="https://cdn3.emoji.gg/emojis /4045-crown.gif" width="50"/> Créditos
-
-Base original: Aarom (Zore-two)
-
-Modificaciones y Optimización: Shizuku
-
-Dev
-
-Librería principal: Baileys Multi Device
-
-<img
-
-src="https://cdn3.emoji.gg/emojis/4045
-
--crown.gif" width="40"/> Colaborador
-
-principal: <a
-
-href="https://github.com/danielalejandrobas
-
-ado-glitch"><img
-
-src="https://github.com/danielalejandrobasa
-
-do-glitch.png" width="200"/></a>
-
+```
+Escanea el código QR o genera tu código de emparejamiento desde la terminal para vincular.
+## <img src="https://cdn3.emoji.gg/emojis/4045-crown.gif" width="50"/> Créditos
+ * 👨‍💻 Base original: **Aarom** (Zore-two)
+ * 🌸 Modificaciones y Optimización: **Shizuku Dev**
+ * 📚 Librería principal: **Baileys Multi Device**
+ * <img src="https://cdn3.emoji.gg/emojis/4045-crown.gif" width="40"/> Colaborador principal: <a href="https://github.com/danielalejandrobasado-glitch"><img src="https://github.com/danielalejandrobasado-glitch.png" width="200"/></a>
 <div align="center">
-
-Infraestructura
-
-SRIZUKU SYeTEM
-
-sólida entregada con
-
+𝕾𝕽𝕴𝖅𝖀𝕶𝖀 𝕾𝖄𝖾𝕿𝕰𝕸 🕷️ — *Infraestructura sólida entregada con éxito.*
 </div>
+```
+
+```
