@@ -40,7 +40,7 @@ let handler = async (m, { conn, isAdmin, isOwner }) => {
 }
 
 handler.help = ['inactivos']
-handler.tags = ['group']
+handler.tags = ['grupo']
 handler.command = ['inactivos']
 handler.group = true
 handler.admin = true
