@@ -32,6 +32,6 @@ let handler = async (m, { conn, text }) => {
 
 handler.command = ['vv']
 handler.help = ['vv']
-handler.tags = ['tools']
+handler.tags = ['herramientas]
 
 export default handler
