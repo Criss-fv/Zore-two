@@ -15,7 +15,7 @@ let handler = async (m, { conn, args, prefix }) => {
     )
 
     if (!Reg.test(text)) return m.reply(
-        `𖤐 *Registro - Zero Two* 🌸\n\n*Formato correcto:*\n${prefix}reg nombre.edad\n\n*Ejemplo:*\n${prefix}reg ${name2}.18\n\n💗 ¡Regístrate para usar todas mis funciones, darling~!`
+        `𖤐 *Registro - Shizuku* 🌸\n\n*Formato correcto:*\n${prefix}reg nombre.edad\n\n*Ejemplo:*\n${prefix}reg ${name2}.18\n\n💗 ¡Regístrate para usar todas mis funciones, darling~!`
     )
 
     let [_, name, age] = text.match(Reg)
@@ -49,7 +49,7 @@ let handler = async (m, { conn, args, prefix }) => {
         text: regbot,
         contextInfo: {
             externalAdReply: {
-                title: '𝐙𝐄𝐑𝐎 𝐓𝐖𝐎 - Registro 🌸',
+                title: '𝐒𝐇𝐈𝐙𝐔𝐊𝐔 - Registro 🌸',
                 body: 'darling~ 💗',
                 thumbnail: thumbBuffer,
                 mediaType: 1,
