@@ -48,7 +48,7 @@ let handler = async (m, { conn }) => {
 }
 
 handler.help = ['staff', 'admins']
-handler.tags = ['group']
+handler.tags = ['grupo']
 handler.command = ['staff', 'admins', 'listadmin']
 handler.group = true // Obliga a que solo se use en grupos
 
