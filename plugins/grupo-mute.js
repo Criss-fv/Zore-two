@@ -38,7 +38,7 @@ let handler = async (m, { conn, prefix, isAdmin, isBotAdmin }) => {
 }
 
 handler.command = ['mute']
-handler.tags = ['group']
+handler.tags = ['grupo']
 handler.group = true
 
 export default handler
