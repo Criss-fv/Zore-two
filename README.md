@@ -4,7 +4,8 @@
 
 ![Zero Two Banner](https://files.catbox.moe/9enbxk.jpg)
 
-*El sistema automatizado más rápido y letal – Shizuku System 🖤*
+*El sistema automatizado más 
+rápido y letal – Shizuku System 🖤*
 
 [![Canal](https://img.shields.io/badge/WhatsApp-Canal-25D366?style=for-the-badge&logo=whatsapp)](https://whatsapp.com/channel/0029Vb6p68rF6smrH4Jeay3Y)
 [![GitHub](https://img.shields.io/badge/GitHub-Repo-181717?style=for-the-badge&logo=github)](https://github.com/zoredevteam-ctrl/Zore-two.git)
