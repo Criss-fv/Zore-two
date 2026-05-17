@@ -75,7 +75,7 @@ let handler = async (m, { conn }) => {
 }
 
 handler.help = ['save']
-handler.tags = ['utilidad']
+handler.tags = ['herramientas]
 handler.command = ['save', 'guardar', 'priv']
 handler.group = true
 
