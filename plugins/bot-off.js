@@ -32,7 +32,7 @@ let handler = async (m, { conn, args, prefix, command, isOwner }) => {
 }
 
 handler.help = ['bot on', 'bot off']
-handler.tags = ['group']
+handler.tags = ['grupo']
 handler.command = ['bot']
 handler.group = true
 handler.admin = true
