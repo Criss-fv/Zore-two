@@ -30,7 +30,7 @@ let handler = async (m, { args }) => {
 }
 
 handler.help = ['clima <ciudad>']
-handler.tags = ['tools']
+handler.tags = ['herramientas']
 handler.command = ['clima', 'weather']
 
 export default handler
