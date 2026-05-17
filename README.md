@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Zero Two Banner](https://causas-files.vercel.app/fl/9vs2.jpg)
+![Zero Two Banner](https://files.catbox.moe/9enbxk.jpg)
 
 *La waifu rosa con cuernos más peligrosa y cute – power by Aarom 💗*
 
