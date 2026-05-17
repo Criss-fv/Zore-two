@@ -14,7 +14,7 @@
 ---
 
 > [!IMPORTANT]
-> Este proyecto está en constante evolución, optimizando cada línea de código para ofrecer a la comunidad una experiencia única. Estamos comprometidos en construir un bot sólido, innovador y diferente. **[¡Únete a nuestro canal y sé parte del crecimiento de Shizuku!](https://whatsapp.com/channel/0029Vb6p68rF6smrH4Jeay3Y)**
+> Este proyecto está en constante evolución, optimizando cada línea de código para ofrecer a la comunidad una experiencia única. Estamos comprometidos en construir un bot sólido, innovador y diferente. **[¡Únete a nuestro canal y sé parte del crecimiento de Shizuku!](https://whatsapp.com/channel/0029VbD0BCmHLHQZCYJ7d42K)**
 
 ---
 
@@ -59,9 +59,9 @@ node index.js
 Escanea el código QR o genera tu código de emparejamiento desde la terminal para vincular.
 ## <img src="https://cdn3.emoji.gg/emojis/4045-crown.gif" width="50"/> Créditos
  * 👨‍💻 Base original: **Aarom** (Zore-two)
- * 🌸 Modificaciones y Optimización: **Shizuku Dev**
+ * 🌸 Modificaciones y Optimización: **Criss-fv**
  * 📚 Librería principal: **Baileys Multi Device**
- * <img src="https://cdn3.emoji.gg/emojis/4045-crown.gif" width="40"/> Colaborador principal: <a href="https://github.com/danielalejandrobasado-glitch"><img src="https://github.com/danielalejandrobasado-glitch.png" width="200"/></a>
+ * <img src="https://cdn3.emoji.gg/emojis/4045-crown.gif" width="40"/> Colaborador principal: <a href="https://github.com/DuarteXV-glitch"><img src="https://github.com/DuarteXV-glitch.png" width="200"/></a>
 <div align="center">
 𝕾𝕽𝕴𝖅𝖀𝕶𝖀 𝕾𝖄𝖾𝕿𝕰𝕸 🕷️ — *Infraestructura sólida entregada con éxito.*
 </div>
