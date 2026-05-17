@@ -36,7 +36,7 @@ let handler = async (m, { conn, isAdmin, isBotAdmin, text }) => {
 }
 
 handler.help = ['antilink on', 'antilink off']
-handler.tags = ['group']
+handler.tags = ['grupo']
 handler.command = ['antilink']
 handler.group = true
 
