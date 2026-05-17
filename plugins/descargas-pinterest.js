@@ -1,7 +1,7 @@
-import fetch from 'node-fetch'
+import axios from 'axios'
 import baileys from '@whiskeysockets/baileys'
 
-// Función nativa para construir y enviar el álbum en paralelo
+// Función nativa para construir y enviar el álbum de imágenes en paralelo
 async function sendAlbumMessage(conn, chatId, mediaArray, options = {}) {
     const caption = options.caption || ''
     const quoted = options.quoted || null
@@ -14,7 +14,7 @@ async function sendAlbumMessage(conn, chatId, mediaArray, options = {}) {
     const preparedMaster = await baileys.generateWAMessage(chatId, albumStructure, quoted ? { quoted } : {})
     await conn.relayMessage(preparedMaster.key.remoteJid, preparedMaster.message, { messageId: preparedMaster.key.id })
 
-    // Envío en paralelo supersónico
+    // Envío simultáneo a máxima velocidad de todas las imágenes
     await Promise.all(mediaArray.map(async (media, index) => {
         const messageContent = {
             [media.type]: media.data,
@@ -37,17 +37,59 @@ async function sendAlbumMessage(conn, chatId, mediaArray, options = {}) {
     return preparedMaster
 }
 
+// Función nativa e inmortal de búsqueda que me pasaste (Clonada al 100%)
+async function searchPinterest(query) {
+    const link = `https://id.pinterest.com/resource/BaseSearchResource/get/?source_url=%2Fsearch%2Fpins%2F%3Fq%3D${encodeURIComponent(query)}%26rs%3Dtyped&data=%7B%22options%22%3A%7B%22applied_unified_filters%22%3Anull%2C%22appliedProductFilters%22%3A%22---%22%2C%22article%22%3Anull%2C%22auto_correction_disabled%22%3Afalse%2C%22corpus%22%3Anull%2C%22customized_rerank_type%22%3Anull%2C%22domains%22%3Anull%2C%22dynamicPageSizeExpGroup%22%3A%22control%22%2C%22filters%22%3Anull%2C%22journey_depth%22%3Anull%2C%22page_size%22%3Anull%2C%22price_max%22%3Anull%2C%22price_min%22%3Anull%2C%22query_pin_sigs%22%3Anull%2C%22query%22%3A%22${encodeURIComponent(query)}%22%2C%22redux_normalize_feed%22%3Atrue%2C%22request_params%22%3Anull%2C%22rs%22%3A%22typed%22%2C%22scope%22%3A%22pins%22%2C%22selected_one_bar_modules%22%3Anull%2C%22seoDrawerEnabled%22%3Afalse%2C%22source_id%22%3Anull%2C%22source_module_id%22%3Anull%2C%22source_url%22%3A%22%2Fsearch%2Fpins%2F%3Fq%3D${encodeURIComponent(query)}%22%2C%22top_pin_id%22%3Anull%2C%22top_pin_ids%22%3Anull%7D%2C%22context%22%3A%7B%7D%7D`
+    
+    const headers = {
+        'accept': 'application/json, text/javascript, */*; q=0.01',
+        'accept-language': 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
+        'priority': 'u=1, i',
+        'referer': 'https://id.pinterest.com/',
+        'sec-ch-ua': '"Not(A:Brand";v="99", "Google Chrome";v="133", "Chromium";v="133")',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-origin',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
+        'x-app-version': 'c056fb7',
+        'x-pinterest-appstate': 'active',
+        'x-pinterest-pws-handler': 'www/index.js',
+        'x-requested-with': 'XMLHttpRequest'
+    }
+
+    try {
+        const res = await axios.get(link, { headers })
+        if (res.data && res.data.resource_response && res.data.resource_response.data && res.data.resource_response.data.results) {
+            return res.data.resource_response.data.results.map(item => {
+                if (item.images) {
+                    return {
+                        image_large_url: item.images.orig?.url || null
+                    }
+                }
+                return null
+            }).filter(img => img !== null && img.image_large_url !== null)
+        }
+        return []
+    } catch (error) {
+        console.error('Error interno de búsqueda en Axios:', error)
+        return []
+    }
+}
+
 let handler = async (m, { conn, args, usedPrefix, command }) => {
     const prefix = usedPrefix || global.prefix || '.'
     const currentCommand = command || 'pinterest'
     const searchQuery = args.join(' ').trim()
 
+    // Estructura estética de Shizuku System
     if (!searchQuery) {
         return m.reply(
             `✠ ══〔 𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒 〕══ ✠\n\n` +
             `⚠️ *Error de parámetros*\n` +
             `📌 Uso: *${prefix}${currentCommand} <búsqueda>*\n` +
-            `💡 Ejemplo: *${prefix}${currentCommand} chika fujiwara*\n\n` +
+            `💡 Ejemplo: *${prefix}${currentCommand} paisaje anime*\n\n` +
             `_...ingresa un término válido._ 🕷️`
         )
     }
@@ -55,53 +97,34 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
     await m.react('⏳')
 
     try {
-        // 1. Construimos la URL nativa que nos pasaste
-        const link = `https://id.pinterest.com/resource/BaseSearchResource/get/?source_url=%2Fsearch%2Fpins%2F%3Fq%3D${encodeURIComponent(searchQuery)}%26rs%3Dtyped&data=%7B%22options%22%3A%7B%22applied_unified_filters%22%3Anull%2C%22appliedProductFilters%22%3A%22---%22%2C%22article%22%3Anull%2C%22auto_correction_disabled%22%3Afalse%2C%22corpus%22%3Anull%2C%22customized_rerank_type%22%3Anull%2C%22domains%22%3Anull%2C%22dynamicPageSizeExpGroup%22%3A%22control%22%2C%22filters%22%3Anull%2C%22journey_depth%22%3Anull%2C%22page_size%22%3Anull%2C%22price_max%22%3Anull%2C%22price_min%22%3Anull%2C%22query_pin_sigs%22%3Anull%2C%22query%22%3A%22${encodeURIComponent(searchQuery)}%22%2C%22redux_normalize_feed%22%3Atrue%2C%22request_params%22%3Anull%2C%22rs%22%3A%22typed%22%2C%22scope%22%3A%22pins%22%2C%22selected_one_bar_modules%22%3Anull%2C%22seoDrawerEnabled%22%3Afalse%2C%22source_id%22%3Anull%2C%22source_module_id%22%3Anull%2C%22source_url%22%3A%22%2Fsearch%2Fpins%2F%3Fq%3D${encodeURIComponent(searchQuery)}%22%2C%22top_pin_id%22%3Anull%2C%22top_pin_ids%22%3Anull%7D%2C%22context%22%3A%7B%7D%7D`
+        // Ejecutamos el raspador nativo con inmunidad antibloqueos
+        const searchResults = await searchPinterest(searchQuery)
 
-        // Headers necesarios para simular que somos un navegador real y no nos bloquee
-        const headers = {
-            'accept': 'application/json, text/javascript, */*; q=0.01',
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'x-requested-with': 'XMLHttpRequest'
-        }
-
-        const response = await fetch(link, { headers })
-        const json = await response.json()
-
-        // 2. Mapeo y filtrado del árbol interno de Pinterest
-        const results = json?.resource_response?.data?.results || []
-        
-        // Buscamos dentro de cada objeto la imagen original en HD
-        const validImages = results
-            .map(pin => pin?.images?.orig?.url)
-            .filter(url => url) // Elimina campos vacíos si los hay
-
-        if (validImages.length === 0) {
+        if (!searchResults || searchResults.length === 0) {
             await m.react('❌')
-            return m.reply('❌ No encontré ninguna imagen para esa búsqueda, darling~')
+            return m.reply('❌ No se encontraron resultados que coincidan con tu búsqueda, darling~')
         }
 
-        // Tomamos las primeras 5 imágenes de la respuesta nativa
-        const mediaElements = validImages.slice(0, 5).map(url => ({
+        // Extraemos las primeras 5 imágenes del arreglo mapeado
+        const mediaElements = searchResults.slice(0, 5).map(item => ({
             type: 'image',
-            data: { url }
+            data: { url: item.image_large_url }
         }))
 
-        // Estética Shizuku para el mensaje final
         const captionText = 
             `✠ ══〔 𝕾𝖍𝖎𝖟𝖚𝖐𝖚 𝕾𝖞𝖘𝖙𝖊𝖒 〕══ ✠\n\n` +
             `🌸 *Búsqueda:* ${searchQuery}\n` +
             `⸸ *Resultados directos:* ${mediaElements.length}\n\n` +
-            `_...blinky extrajo los datos originales de Pinterest._ 🕷️`
+            `_...blinky extrajo los datos originales de Pinterest con éxito._ 🕷️`
 
-        // Envío directo al chat
+        // Envío directo al chat por ráfaga paralela
         await sendAlbumMessage(conn, m.chat, mediaElements, { caption: captionText, quoted: m })
         await m.react('✅')
 
     } catch (error) {
-        console.error('Error usando endpoint nativo de Pinterest:', error)
+        console.error('Error general en el Handler:', error)
         await m.react('❌')
-        m.reply(`💔 Error en la conexión interna con los servidores de Pinterest.`)
+        m.reply(`💔 Error crítico en el puente de datos del sistema interno.`)
     }
 }
 
