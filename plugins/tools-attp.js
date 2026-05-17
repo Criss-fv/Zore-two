@@ -37,7 +37,7 @@ const handler = async (m, { conn, args }) => {
 }
 
 handler.help = ['attp <texto>']
-handler.tags = ['stickers', 'tools']
+handler.tags = ['stickers']
 handler.command = ['attp']
 
 export default handler
