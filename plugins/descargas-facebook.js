@@ -168,5 +168,5 @@ let handler = async (m, { conn, args }) => {
 }
 
 handler.command = ['fb']
-
+handler.tags = ['descargas']
 export default handler
