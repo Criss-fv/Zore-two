@@ -27,7 +27,7 @@ let handler = async (m) => {
 }
 
 handler.help = ['horario', 'hora']
-handler.tags = ['tools', 'main']
+handler.tags = ['herramientas']
 handler.command = ['horario', 'hora', 'time', 'times']
 
 export default handler
