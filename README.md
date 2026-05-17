@@ -20,7 +20,12 @@
 
 ## Descripción <img src="https://camo.githubusercontent.com/d63d1e8469a49534c1d239a47c9817e65498ce994f3cdbef76a2df4237e4763d/68747470733a2f2f692e70696e696d672e636f6d2f6f726967696e616c732f37332f36392f36652f37333639366530323264663763643563623364393939633638373533363164642e676966" width="40"/>
 
-**Shizuku** es un bot multi-dispositivo para WhatsApp de alto rendimiento, optimizado al extremo para enviar multimedia en ráfagas paralelas ultrarrápidas y equipado con sistemas inteligentes anti-repetición. **Nota importante:** Este bot fue creado usando la base de Zore-two y ha sido rediseñado para ofrecer una infraestructura limpia, modular y veloz en entornos como Termux. 🕷️🔥
+
+
+**Shizuku** es un bot multi-dispositivo para WhatsApp, construido con la librería Baileys e inspirado en la estética de Shizuku. Trae un amplio catálogo de comandos para descargas rápidas, herramientas, utilidades avanzadas y mucho más. Despliega todo su potencial y no te quedes atrás en el sistema~ 🕷️🕸️
+
+
+​**Nota importante:** Este bot fue creado usando la base de Zore-two y ha sido rediseñado para ofrecer una infraestructura limpia, modular y veloz en entornos 
 
 ---
 
