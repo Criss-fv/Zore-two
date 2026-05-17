@@ -10,6 +10,7 @@ const handler = async (m, { conn, who }) => {
 }
 
 handler.command = ['demote', 'quitaradmin', 'unadmin']
+handler.tags = ['grupo']
 handler.admin = true
 handler.group = true
 handler.botAdmin = true
