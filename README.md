@@ -51,7 +51,6 @@ npm install
 ```bash
 node index.js
 ```
-```
 Escanea el código QR o genera tu código de emparejamiento desde la terminal para vincular.
 ## <img src="https://cdn3.emoji.gg/emojis/4045-crown.gif" width="50"/> Créditos
  * 👨‍💻 Base original: **Aarom** (Zore-two)
