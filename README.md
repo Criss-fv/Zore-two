@@ -32,7 +32,7 @@
 ## ✨ Características ![Rainbow Cat](https://gist.githubusercontent.com/yazdipour/91dea3fdf97dba702ed89a6a1b9a98a7/raw/rainbowcat.gif)
 
 - 🍬 **Prefijo:** `.` `#` `/`
-- 📦 **Comandos por categorías:** menús limpios, ráfagas multimedia, pinterest, tiktok y herramientas avanzadas
+- 📦 **Comandos por categorías:** menús limpios, pinterest, tiktok y herramientas avanzadas
 - 🔖 **Versión:** ^1.0 Latest (Shizuku Core)
 - 🖼️ **Banner/Icono:** cámbialos dinámicamente con `.setbanner` / `.seticon`
 - 💾 **Sesión:** persistente y segura con MultiFileAuthState
@@ -59,7 +59,7 @@ node index.js
 Escanea el código QR o genera tu código de emparejamiento desde la terminal para vincular.
 ## <img src="https://cdn3.emoji.gg/emojis/4045-crown.gif" width="50"/> Créditos
  * 👨‍💻 Base original: **Aarom** (Zore-two)
- * 🌸 Modificaciones y Optimización: **Criss-fv**
+ * 🌸 Modificaciones y Optimización: **Criss-fv y DuarteXV**
  * 📚 Librería principal: **Baileys Multi Device**
  * <img src="https://cdn3.emoji.gg/emojis/4045-crown.gif" width="40"/> Colaborador principal: <a href="https://github.com/DuarteXV-glitch"><img src="https://github.com/DuarteXV-glitch.png" width="200"/></a>
 <div align="center">
