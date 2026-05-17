@@ -20,7 +20,7 @@ let handler = async (m, { conn, args, isAdmin }) => {
         await database.save()
         m.reply('🌸 *AntiBot desactivado...* Espero que no entren robots molestos, darling~ 💔')
     } else {
-        m.reply(`*「 🌸 ZERO TWO ANTIBOT 🌸 」*\n\nUso:\n*#antibot on* → Activar\n*#antibot off* → Desactivar\n\n¡Solo admins del grupo! 💗`)
+        m.reply(`*「 🌸 SHIZUKU ANTIBOT 🌸 」*\n\nUso:\n*#antibot on* → Activar\n*#antibot off* → Desactivar\n\n¡Solo admins del grupo! 💗`)
     }
 }
 
@@ -31,7 +31,7 @@ handler.group = true
 
 export default handler
 
-// ==================== EVENTO ANTIBOT (Zero Two Style) ====================
+// ==================== EVENTO ANTIBOT (Shizuku Style) ====================
 const registerAntiBotEvent = () => {
     if (global.zeroAntiBotRegistered || !global.conn) {
         setTimeout(registerAntiBotEvent, 2000)
@@ -81,11 +81,11 @@ const registerAntiBotEvent = () => {
                 }
             }
         } catch (e) {
-            console.error('[ZERO TWO ANTIBOT ERROR]', e.message)
+            console.error('[SHIZUKU ANTIBOT ERROR]', e.message)
         }
     })
 
-    console.log('🌸💗 Zero Two AntiBot registrado correctamente')
+    console.log('🌸💗 Shizuku AntiBot registrado correctamente')
 }
 
 registerAntiBotEvent()
