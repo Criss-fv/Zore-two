@@ -63,7 +63,7 @@ const handler = async (msg, { conn, args, usedPrefix }) => {
 }
 
 handler.help = ['play2 <título>']
-handler.tags = ['download']
+handler.tags = ['descargas']
 handler.command = ['play2']
 
 export default handler
