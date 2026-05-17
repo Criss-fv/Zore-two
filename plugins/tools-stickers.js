@@ -34,7 +34,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 }
 
 handler.help = ['s', 'sticker', 'stiker']
-handler.tags = ['sticker']
+handler.tags = ['stickers']
 handler.command = ['s', 'sticker', 'stiker']
 
 export default handler
